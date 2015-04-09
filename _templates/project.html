@@ -1,0 +1,171 @@
+{% extends "_layouts/base.html" %}
+{% block body %}
+{% include "_layouts/includes/header.html" %}
+		<main>
+			<section id="portfolio-post">
+				<div class="container inner-top-md">
+					<div class="row">
+						
+						<div class="col-md-8">
+							<div id="owl-work" class="owl-carousel owl-inner-pagination owl-inner-nav owl-ui-md owl-one-item">
+								
+								$for()$
+								<div class="item">
+									<figure>
+										<img src="/images/projects/$image.src$" alt="$image.caption $">
+									</figure>
+								</div><!-- /.item -->
+								$endfor$
+							</div><!-- /.owl-carousel -->
+							<div class="post-project"><p class="text-small">$contents$</p></div>
+						</div><!-- /.col -->
+
+						
+						<div class="col-md-4 inner-left-sm">
+							<header>
+								<h2>$title$</h2>			
+								<p class="text-small">$intro$</p>				
+								<ul class="item-details inner-top-xs outer-top-xs border-top">
+									<li class="date">Date: $moment(date).format('YYYY.MM.DD')$$'- ' + moment(end-date).format('YYYY.MM.DD') if end-date else '- Current'$ </li>
+									$if(client)$<li class="client">Client: <a href="$client.link$">$client.name $</a></li>$endif$
+									$if(client.logo)$<li class="img"><a href="$client.link$"><img class="img-thumbnail" src="/images/projects/$client.logo$" alt="$client.name $"></a></li>$endif$
+								</ul><!-- /.item-details -->
+								$if(links)$
+								<ul class="item-details inner-top-xs outer-top-xs border-top">
+									<li><h4>Project Links</h4></li>
+									$for()$
+								</ul><!-- /.item-details -->
+								$endif$
+								$if(partners)$
+								<ul class="item-details inner-top-xs outer-top-xs border-top">
+									<li><h4>Project Partners</h4></li>
+									$for()$
+								</ul><!-- /.item-details -->
+								$endif$
+								$if(tags)$
+								<ul class="item-details inner-top-xs outer-top-xs border-top">
+									<li><h4>Keywords</h4></li>
+									$if(tags.program)$<li class="categories">Program: $for()$</li>$endif$
+									$if(tags.tech)$<li class="categories">Tech: $for()$</li>$endif$
+									$if(tags.tool)$<li class="categories">Tools: $for()$</li>$endif$
+									$if(tags.project)$<li class="categories">Project: $for()$</li>$endif$
+								</ul><!-- /.item-details -->
+								$endif$
+							</header>
+						</div><!-- /.col -->
+						
+					</div><!-- /.row -->
+
+				</div><!-- /.container -->
+				
+			</section>
+
+			{% set isNews = false %}
+			$for()$
+				{% if ((item.projects) and (slug in (item.projects))) %}
+					{% set isNews = true %}
+				$endif$
+			$endfor$
+
+			$if((isNews))$
+			<section id="blog" class="light-bg">
+				<div class="container inner inner-bottom inner-bottom-sm">
+					<div class="row">
+						<div class="col-md-8 col-sm-9 center-block text-center">
+							<header>
+								<h1>Recent News about $title$</h1>
+							</header>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container -->
+
+				<div class="container inner-top-sm inner-top">
+					
+					<div class="row">
+						<div class="col-sm-12">
+							
+							<div class="grid-blog col-3 no-sidebar">
+								<div class="posts">
+
+								$for()$
+									{% if ((item.projects) and (slug in (item.projects))) %}
+									
+									<div class="post format-$item.format$">
+										
+										<div class="post-content">
+											$if(item.images)$
+											<div class="owl-news owl-carousel owl-inner-pagination owl-inner-nav post-media">
+												
+												$for()$
+												<div class="item">
+													<figure>
+														<img src="/images/news/$img.src$" alt="">
+													</figure>
+												</div><!-- /.item -->
+												$endfor$
+												
+											</div><!-- /.owl-carousel -->
+
+											$endif$
+											{% if item.format == "blog" %}
+											<h2 class="post-title">
+												<a href="/news/$item.slug$.html">$item.title $</a>
+											</h2>
+											$else$
+												$if(item.link)$
+												<h2 class="post-title">
+													<a href="$item.link$">$item.title $</a>
+												</h2>
+												$endif$
+											$endif$
+
+											<ul class="meta">
+												<li class="date">$moment(item.date).format('MMM')$$moment(item.date).format('DD')$, $moment(item.date).format('YYYY')$</li>
+												$if(item.tags)$<li class="categories">$for()$$endif$</li>
+												$if(item.link)$<li class="link"><a href="$item.link$">$item.link|truncate(40) $</a></li>$endif$
+											</ul><!-- /.meta -->
+											
+											<p>$item.less$</p>
+											
+											{% if item.format == "blog" %}
+											<a href="/news/$item.slug$.html" class="btn">Read more</a>
+											$else$
+												$if(item.link)$
+												<a href="$item.link$" class="btn">Read more</a>
+												$endif$
+											$endif$
+																																	
+										</div><!-- /.post-content --> 
+										
+									</div><!-- /.post -->
+									$endif$	
+								$endfor$								
+							
+								</div><!-- /.posts -->
+							</div><!-- /.grid-blog -->
+							
+							
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>
+			$endif$
+				
+			<section id="get-in-touch">
+				<div class="container inner">
+					<div class="row">
+						<div class="col-md-8 col-sm-9 center-block text-center">
+							<header>
+								<h1>Find out more</h1>
+								<p>Contact us to learn more about iilab's approach<br/> to innovative technology for social impact.</p>
+							</header>
+							<a href="mailto:contact@iilab.org" class="btn btn-large">Contact Us</a>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container -->
+			</section>
+
+		</main>
+{% include "_layouts/includes/footer.html" %}
+{% endblock %}

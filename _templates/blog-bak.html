@@ -1,0 +1,166 @@
+$partial("_templates/partials/header.html")$
+		<main>
+			<section id="blog" class="light-bg">
+				<div class="container inner-top-sm inner-bottom classic-blog">
+					
+					<div class="row inner-bottom-xs">
+						<div class="col-sm-12">	
+							<ul class="format-filter text-center">
+								<li><a class="active" href="#" data-filter="*" title="All" data-rel="tooltip" data-placement="top"><i class="icon-th"></i></a></li>
+								<li><a href="#" data-filter=".format-blog" title="Blog Posts" data-rel="tooltip" data-placement="top"><i class="icon-edit"></i></a></li>
+								<li><a href="#" data-filter=".format-tech" title="Engineering" data-rel="tooltip" data-placement="top"><i class="icon-tools"></i></a></li>
+								<li><a href="#" data-filter=".format-social" title="Social Media" data-rel="tooltip" data-placement="top"><i class="icon-quote"></i></a></li>
+								<li><a href="#" data-filter=".format-link" title="Links" data-rel="tooltip" data-placement="top"><i class="icon-link"></i></a></li>
+							</ul><!-- /.format-filter -->
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+					<div class="row">
+						
+						<div class="col-md-9 inner-right-sm">
+							
+							<div class="posts sidemeta">
+								
+								$for(posts)$
+									<div class="post format-$item.format$">	
+									
+										<div class="date-wrapper">
+											<div class="date">
+												<span class="day">$day$</span>
+												<span class="month">$month$</span>
+												<span class="month">$year$</span>
+											</div><!-- /.date -->
+										</div><!-- /.date-wrapper -->
+										
+										<div class="format-wrapper">
+											<a href="#" data-filter=".format-$item.format$"><i class="icon-$icons[item.format]$"></i></a>
+										</div><!-- /.format-wrapper -->
+										
+										<div class="post-content">
+											
+											$if(images)$
+											<div class="owl-news owl-carousel owl-inner-pagination owl-inner-nav post-media">
+												
+												$for(images)$
+												<div class="item">
+													<figure>
+														<img src="/images/news/$src$" alt="$src$">
+													</figure>
+												</div><!-- /.item -->
+												$endfor$
+												
+											</div><!-- /.owl-carousel -->
+
+											$endif$
+											$if(format)$
+											<h2 class="post-title">
+												<a href="/news/$item.slug$.html">$title$</a>
+											</h2>
+											$else$
+												$if(link)$
+												<h2 class="post-title">
+													<a href="$item.link$">$title$</a>
+												</h2>
+												$endif$
+											$endif$
+											
+											<ul class="meta">
+												$if(tags)$<li class="categories">$for(categories)$$endfor$</li>$endif$
+												$if(link)$<li class="link"><a href="$item.link$">$item.link|truncate(40)$</a></li>$endif$
+											</ul><!-- /.meta -->
+											
+											$if(teaser)$
+											  <p>$teaser$</p>
+											$else$
+											  <p>$body</p>
+											$endif$
+											$if(format)$
+											<a href="/news/$slug$.html" class="btn">Read more</a>
+											$else$
+												$if(item.link)$
+												<a href="$link$" class="btn">Read more</a>
+												$endif$
+											$endif$
+
+										</div><!-- /.post-content --> 
+										
+									</div><!-- /.post -->
+									$endif$
+								$endfor$ 
+								
+							</div><!-- /.posts -->
+							
+
+							$if(pagination)$
+							    <ul class="pagination">
+							        $if(pagination.next)$
+							        	$if(pagination.next)$
+								            <li><a href="/news-$pagination.next.num$.html">&lt; Older Posts</a></li>
+								        $endif$
+							        $endif$
+							        $if(pagination.prev)$
+							        	$if(pagination.prev)$
+							                <li><a href="/news-$pagination.prev.num$.html">Recent Posts&nbsp;&gt;</a></li>
+							            $else$
+								            <li><a href="/news.html">Recent Posts&nbsp;&gt;</a></li>
+							            $endif$ 
+							        $endif$
+							    </ul><!-- /.pagination --> 
+							$endif$							
+							
+						</div><!-- /.col -->
+						<aside class="col-md-3">
+							
+							<div class="sidebox widget">
+								<h4>Projects</h4>
+								
+								<div class="row thumbs gap-xs">
+
+								$for(projects)$
+									<div class="col-xs-6 thumb">
+									<a href="/projects/$project.slug$.html">
+										<figure>
+											<figcaption class="text-overlay">
+												<div class="info">
+													<p>$title$</p>
+												</div><!-- /.info -->
+											</figcaption>
+											<img src="/images/projects/$project.cover[0].src$" alt="$project.cover[0].caption $">
+										</figure>
+									</a>
+									</div><!-- /.thumb -->
+
+								$endfor$ 
+									
+								</div><!-- /.row -->
+							</div><!-- /.widget -->
+							
+							<div class="sidebox widget">
+								<h4>About</h4>
+								<p>iilab - information innovation lab - stands for the respect and development of fundamental rights of communities everywhere around the world. We empower the social economy with innovation and technology.</p>
+							</div><!-- /.widget -->
+
+							<div class="sidebox widget">
+								<a href="index.html"><img class="logo img-intext" style="width:100%" src="/images/logo.svg" alt=""></a>
+								<p>$site.description$</p>
+								<a href="/index.html#team" class="txt-btn">More about us</a>
+							</div><!-- /.widget -->
+							
+						</aside>
+						
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>
+			
+			<!-- ============================================================= SECTION – BLOG : END ============================================================= -->
+		</main>
+$partial("_templates/partials/footer.html")$
+<script type="text/javascript">
+    var disqus_shortname = 'iilab';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>

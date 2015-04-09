@@ -1,0 +1,47 @@
+			<section id="team" class="light-bg">
+				<div class="container inner-top inner-bottom-sm">
+					
+					<div class="row">
+						<div class="col-md-8 col-sm-10 center-block text-center">
+							<header>
+								<h1>$team.title$</h1>
+								<p>$team.description$</p>
+							</header>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+					<div class="row inner-top-sm text-center">
+					
+					$for()$	
+						<div class="col-sm-4 $"col-sm-offset-2" if (loop.index == 1) $ inner-bottom-sm inner-left inner-right">
+							<figure class="member">
+								
+								<div class="">
+									<img src="assets/images/persons/$key$.jpg" class="img-circle">
+								</div><!-- /.icon-overlay -->
+								
+								<figcaption>
+								
+									<h2>
+										$person.name$
+										<span>$person.title$</span>
+									</h2>
+									
+									<blockquote>$person.description$</blockquote>
+									
+									<ul class="social">
+										<li><a href="$person.twitter$"><i class="icon-s-twitter"></i></a></li>
+										<li><a href="$person.linkedin$"><i class="icon-s-linkedin"></i></a></li>
+										<li><a href="$person.github$"><i class="icon-s-github"></i></a></li>
+									</ul><!-- /.social -->
+									
+								</figcaption>
+								
+							</figure>
+						</div><!-- /.col -->
+					$endfor$
+						
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>

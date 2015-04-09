@@ -1,0 +1,27 @@
+$partial("_templates/partials/header.html")$
+    <main>
+      <section id="blog-post" class="light-bg">
+        <div class="container inner-bottom classic-blog">
+          <div class="row">
+            
+            <div class="col-md-12 inner-sm">
+                
+              <div class="sidemeta">
+              $body$
+              $partial("_templates/blog/comments.html")$
+              </div><!-- /.sidemeta -->
+            </div><!-- /.col -->            
+          </div><!-- /.row -->
+        </div><!-- /.container -->
+      </section>
+    </main>
+$partial("_templates/partials/footer.html")$
+<script type="text/javascript">
+    var disqus_shortname = 'iilab';
+    (function() {
+        var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+        dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+        (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+    })();
+</script>
+

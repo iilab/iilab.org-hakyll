@@ -1,0 +1,244 @@
+body {
+    color: #878787;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #656565;
+}
+
+.author {
+    color: #656565;
+}
+
+.btn {
+    box-shadow: none;
+}
+
+#blog-post .post img {
+width: 100%;
+height: auto;
+}
+
+figcaption.overlay p {
+    font-family: 'Source Sans Pro',sans-serif;
+    font-size: 22px;
+    line-height: 135%;
+}
+
+figcaption div.vertical-bottom {
+    position:absolute;
+    bottom:0px;
+}
+
+figcaption div.vertical-bottom p {
+}
+
+figcaption.overlay {
+    bottom: 0;
+    font: 0px/0 a;
+    left: 0;
+    padding: 10%;
+    position: absolute;
+    right: 0;
+    top: 0;
+    transition: all 200ms ease-out 0s;
+}
+
+.post-project ul li:before, .post-contents ul li:before {
+    color: #1ABB9C;
+    content: "";
+    font-family: 'fontello-circle';
+    font-size: 8px;
+    font-weight: normal;
+    margin-left: -20px;
+    padding-top: 1px;
+    position: absolute;
+    vertical-align: top;
+}
+
+.navbar-nav > li > a {
+    color: #656565;
+    border: none;
+}
+
+.dark-bg {
+    background-color: #656565;
+}
+
+.footer-bottom {
+    background: none repeat scroll 0 0 #363636;
+}
+
+.dark-bg, .dark-bg p, .dark-bg .item-details li:before {
+    color: #FFFFFF;
+}
+
+footer.dark-bg {
+    color: #FFFFFF;
+}
+
+.footer-bottom p, .footer-bottom a {
+    color: #FFFFFF;
+}
+
+select, textarea, input[type="text"], input[type="password"], input[type="datetime"], input[type="datetime-local"], input[type="date"], input[type="month"], input[type="time"], input[type="week"], input[type="number"], input[type="email"], input[type="url"], input[type="search"], input[type="tel"], input[type="color"], .uneditable-input {
+    color: #FFFFFF;
+}
+
+#hero h1 {
+    font-size: 45px;
+}
+
+
+@media (max-width: 767px) {
+    #hero h1 {
+        font-size: 26px;
+    }
+}
+
+@media (min-width: 768px) and (max-height: 1024px) {
+    #hero h1 {
+        font-size: 39px;
+    }
+}
+
+@media (max-width: 991px) {
+    .yamm ul.nav.pull-right {
+        float:none !important;
+    }
+}
+
+.navbar-header {
+    background: none repeat scroll 0 0 #F7F7F7;
+    border-bottom: 1px solid #E9E9E9;
+}
+
+.skrollable-after .navbar-nav > li > a {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    margin-top: -1px;
+}
+.nav > li > a:hover {
+    background-color: transparent;
+    border-color: rgba(255, 255, 255, 0) rgba(255, 255, 255, 0) -moz-use-text-color;
+    color: #1ABB9C;
+}
+
+.member .text-overlay .info .social li a:hover .icon-s-github {
+    color: #555555;
+    color: #333333;
+}
+
+.social a .icon-s-github:after {
+    background: #555555;
+    background: #333333;
+}
+
+.social a .icon-s-linkedin:after {
+    background: #0077B5;
+    background: #0077B5;
+}
+
+.post-content li a {
+border-bottom: 1px solid #73879C;
+}
+
+#scrollUp {
+	background: none repeat scroll 0 0 rgba(255, 255, 255, 0.15);
+}
+
+.dark-bg input, .dark-bg button, .dark-bg select, .dark-bg textarea {
+    color: #FFFFFF;
+}	
+.form-control::-webkit-input-placeholder {
+    color: #C2C7CC;
+}
+.form-control:-moz-placeholder {
+    color: #C2C7CC;
+}
+.form-control::-moz-placeholder {
+    color: #C2C7CC;
+}
+.form-control:-ms-input-placeholder {
+    color: #C2C7CC;
+}
+.dark-bg .form-control::-webkit-input-placeholder {
+    color: #DDDDDD;
+}
+.dark-bg .form-control:-moz-placeholder {
+    color: #DDDDDD;
+}
+.dark-bg .form-control::-moz-placeholder {
+    color: #DDDDDD;
+}
+.dark-bg .form-control:-ms-input-placeholder {
+    color: #DDDDDD;
+}
+.search .form-control::-webkit-input-placeholder {
+    color: #C2C7CC;
+}
+.search .form-control:-moz-placeholder {
+    color: #C2C7CC;
+}
+.search .form-control::-moz-placeholder {
+    color: #C2C7CC;
+}
+.search .form-control:-ms-input-placeholder {
+    color: #C2C7CC;
+}
+
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Source Sans Pro'), local('SourceSansPro-Regular'), url(https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/ODelI1aHBYDBqgeIAH2zlNHq-FFgoDNV3GTKpHwuvtI.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Source Sans Pro Bold'), local('SourceSansPro-Bold'), url(https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/toadOcfmlt9b38dHJxOBGIqjGYJUyOXcBwUQbRaNH6c.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 400;
+  src: local('Source Sans Pro Italic'), local('SourceSansPro-It'), url(https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/M2Jd71oPJhLKp0zdtTvoM_bce-VcyLJMRR1FC9qWbU8.woff) format('woff');
+}
+@font-face {
+  font-family: 'Source Sans Pro';
+  font-style: italic;
+  font-weight: 700;
+  src: local('Source Sans Pro Bold Italic'), local('SourceSansPro-BoldIt'), url(https://themes.googleusercontent.com/static/fonts/sourcesanspro/v7/fpTVHK8qsXbIeTHTrnQH6PgYMAt3u4NmhhzLLLPJ5qH3rGVtsTkPsbDajuO5ueQw.woff) format('woff');
+}
+
+
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 300;
+  src: local('Lato Light'), local('Lato-Light'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/kcf5uOXucLcbFOydGU24WALUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 400;
+  src: local('Lato Regular'), local('Lato-Regular'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/qIIYRU-oROkIk8vfvxw6QvesZW2xOQ-xsNqO47m55DA.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 700;
+  src: local('Lato Bold'), local('Lato-Bold'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/qdgUG4U09HnJwhYI-uK18wLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}
+@font-face {
+  font-family: 'Lato';
+  font-style: normal;
+  font-weight: 900;
+  src: local('Lato Black'), local('Lato-Black'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/G2uphNnNqGFMHLRsO_72ngLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
+}

@@ -1,0 +1,45 @@
+			<section id="work" class="light-bg">
+				<div class="container inner">
+					
+					<div class="row">
+						<div class="col-md-8 col-sm-9 center-block text-center">
+							<header>
+								<h1>$work.title$</h1>
+								<p>$work.description$</p>
+							</header>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+					<div class="row inner-top-sm">
+						<div class="col-sm-12 portfolio">
+							
+							<ul class="filter text-center">
+								<li><a href="#" data-filter="*" class="active">All</a></li>
+								$for()$
+								<li><a href="#" data-filter=".$key$">$name$</a></li>
+								$endfor$
+							</ul><!-- /.filter -->
+							
+							<ul class="items col-3">
+								$for()$
+								<li class="item thumb $project.program$">
+									<a href="/projects/$project.slug$.html">
+										<figure>
+											<figcaption class="text-overlay">
+												<div class="info">
+													<h4>$project.title$</h4>
+													<p>$programs[project.program]$</p>
+												</div><!-- /.info -->
+											</figcaption>
+											<img src="/images/projects/$project.cover[0].src$" alt="$project.cover[0].caption $">
+										</figure>
+									</a>
+								</li><!-- /.item -->
+								$endfor$ 
+							</ul><!-- /.items -->
+							
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>

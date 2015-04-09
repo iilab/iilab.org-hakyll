@@ -1,0 +1,73 @@
+		<footer class="dark-bg">
+			<div class="container inner">
+				<div class="row">
+					
+					<div class="col-md-3 col-sm-6 inner">
+						<h4>Who we are</h4>
+						<a href="index.html"><img class="logo img-intext" src="/images/logo-white.svg" alt=""></a>
+						<p>$site.description$</p>
+						<a href="/index.html#team" class="txt-btn">More about us</a>
+					</div><!-- /.col -->
+					
+					<div class="col-md-3 col-sm-6 inner">
+						<h4>Latest projects</h4>
+						
+						<div class="row thumbs gap-xs">
+							$for()$
+							<div class="col-xs-6 thumb">
+								<a href="/projects/$project.slug$.html">
+								<figure class="icon-overlay icn-link">
+									<figcaption class="text-overlay">
+										<div class="info">
+											<p>$project.title$</h4>
+										</div><!-- /.info -->
+									</figcaption>
+									<img src="/images/projects/$project.cover[0].src$" alt="$project.cover[0].caption $">
+								</figure>
+								</a>
+							</div><!-- /.thumb -->
+							$endfor$ 
+						</div><!-- /.row -->
+					</div><!-- /.col -->
+					
+					
+					<div class="col-md-3 col-sm-6 inner">
+						<h4>Get In Touch</h4>
+						<p>$contact.description$</p>
+						<ul class="contacts">
+							<li><a href="mailto:$site.contact.email$"><i class="icon-mail-1 contact"></i> $site.contact.email $</a></li>
+							<li><i class="icon-location contact"></i> $site.contact.address1$</li>
+							<li><i class="icon-location contact"></i> $site.contact.address2$</li>
+							<li><i class="icon-info contact"></i> $site.contact.registration$</li>
+						</ul><!-- /.contacts -->
+					</div><!-- /.col -->
+					
+					<div class="col-md-3 col-sm-6 inner">
+						<h4>Stay in touch</h4>
+						<p>Receive updates about our projects.</p>
+						<form id="newsletter" class="form-inline newsletter" role="form" action="https://iilab.us4.list-manage.com/subscribe/post" method="POST">
+							<input type="hidden" name="u" value="c026c6b05afa24ee6d7fb3626">
+							<input type="hidden" name="id" value="a218f30db9">
+
+							<label class="sr-only" for="MERGE0">Email address</label>
+						    <input type="email" class="form-control" placeholder="Enter your email address" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0">
+							<button type="submit" class="btn btn-default btn-submit">Subscribe</button>
+						</form>
+					</div><!-- /.col -->
+				</div><!-- /.row --> 
+			</div><!-- .container -->
+		  
+			<div class="footer-bottom">
+				<div class="container inner">
+					<p class="pull-left">© 2014 $site.title$. All rights reserved.</p>
+					<ul class="footer-menu pull-right">
+						<li><a href="/">Home</a></li>
+						<li><a href="/#about">About</a></li>
+						<li><a href="/#work">Work</a></li>
+						<li><a href="/#team">Team</a></li>
+						<li><a href="/#blog">Blog</a></li>
+					</ul><!-- .footer-menu -->
+				</div><!-- .container -->
+			</div><!-- .footer-bottom -->
+		</footer>
+		

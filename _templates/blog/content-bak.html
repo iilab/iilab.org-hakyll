@@ -1,0 +1,74 @@
+								<div class="post format-gallery">
+									
+									<div class="date-wrapper">
+										<div class="date">
+											<span class="day">$moment(date).format('DD')$</span>
+											<span class="month">$moment(date).format('MMM')$</span>
+											<span class="month">$moment(date).format('YYYY')$</span>
+										</div><!-- /.date -->
+									</div><!-- /.date-wrapper -->
+									
+									<div class="format-wrapper">
+										<a href="#owl-work"><i class="icon-picture"></i></a>
+									</div><!-- /.format-wrapper -->
+									
+									<div class="post-content">
+										
+										<p class="author"><a href="#author" title="Post author" data-rel="tooltip" data-placement="left">$persons[author].name$</a></p> 
+										
+										<h1 class="post-title">$title$</h1>
+										
+										<ul class="meta">
+											$if(project)$<li class="categories"><a href="/projects/$collections[project].slug$.html">$project$</a></li>$endif$
+											$if(program)$<li class="categories"><a href="/programs.html#$program$">$program$</a></li>$endif$
+											<li class="categories">$for()$</li>
+											<!--<li class="comments"><a href="#">24</a></li>
+											<li class="likes"><a href="#">73</a></li>-->
+										</ul><!-- /.meta -->
+										
+										$teaser$
+
+										<div id="owl-work" class="owl-carousel owl-inner-pagination owl-inner-nav post-media">
+											$for()$
+											<div class="item">
+												<figure>
+													<img src="/images/news/$image.src$" alt="$image.caption$">
+													<em>$image.caption$</em>
+												</figure>
+											</div><!-- /.item -->
+											$endfor$
+										</div><!-- /.owl-carousel -->
+										
+
+										<div class="post-contents">
+										$more$
+										</div>
+										
+									</div><!-- /.post-content -->
+									
+								</div><!-- /.post -->
+								
+								<div id="author" class="post-author">
+									<figure>
+										
+										<div class="author-image icon-overlay icn-link">
+											<a href="#"><img src="/images/persons/$author$.jpg" alt=""></a>
+										</div>
+										
+										<figcaption class="author-details">
+											<h3>About the author</h3>
+											<p><a href="$persons[author].site$">$persons[author].name$</a> $persons[author].description $</p>
+											<ul class="meta">
+												<!--<li class="author-posts"><a href="#">All posts by $persons[author].name$</a></li>-->
+												<li class="url"><a href="$persons[author].site$">$persons[author].site$</a></li>
+											</ul><!-- /.meta -->
+											<ul class="social">
+												<li><a href="$persons[author].twitter$"><i class="icon-s-twitter"></i></a></li>
+												<li><a href="$persons[author].linkedin$"><i class="icon-s-linkedin"></i></a></li>
+												<li><a href="$persons[author].github$"><i class="icon-s-github"></i></a></li>
+											</ul><!-- /.social -->
+										</figcaption>
+										
+									</figure>
+								</div><!-- /.post-author -->								
+							

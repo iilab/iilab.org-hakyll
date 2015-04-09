@@ -1,0 +1,53 @@
+			<section id="contributors" class="dark-bg">
+				<div class="container inner-top inner-bottom-sm">
+					
+					<div class="row">
+						<div class="col-md-8 col-sm-10 center-block text-center">
+							<header>
+								<h1>$contributors.title$</h1>
+								<p>$contributors.description$</p>
+							</header>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+					<div class="row inner-top-sm text-center">
+					
+					$for()$	
+						<div class="col-sm-4 inner-bottom-sm inner-left inner-right">
+							<figure class="member">
+								
+								<div class="">
+									<a href="$person.site$"><img src="assets/images/persons/$key$.jpg" class="img-circle"></a>
+								</div><!-- /.icon-overlay -->
+								
+								<figcaption>
+								
+									<h2>
+										$person.name$
+										<span>$person.title$</span>
+									</h2>
+			
+									<blockquote>$person.description$</blockquote>
+									
+									<ul class="social">
+										<li><a href="$person.twitter$"><i class="icon-s-twitter"></i></a></li>
+										<li><a href="$person.github$"><i class="icon-s-github"></i></a></li>
+									</ul><!-- /.social -->
+									
+									
+									<ul class="arrowed">
+										$for()$
+										<li><a href="$site$">$key $</a></li>
+										$endfor$
+									</ul>
+						
+								</figcaption>
+								
+							</figure>
+						</div><!-- /.col -->
+					$endfor$
+						
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>
