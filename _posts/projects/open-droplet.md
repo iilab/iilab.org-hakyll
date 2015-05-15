@@ -5,7 +5,7 @@ collection: projects
 template: project.html
 date: 2014-05-01
 end-date: 
-program: access
+program: community
 links: http://opendroplet.org
 links-title: Website
 partners: Resurgence, Etemu

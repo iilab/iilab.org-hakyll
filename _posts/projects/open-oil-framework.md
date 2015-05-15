@@ -1,20 +1,20 @@
 ---
 title: Open Oil Data Framework
 slug: open-oil-framework
-date: 2014-05-01
-end-date: 
+date: 2014-07-01
+end-date: 2014-09-01
 collection: projects
 template: project.html
-program: collaboration
+program: innovation
 client: Open Oil
 client-link: http://openoil.net
 client-logo: openoil_logo.png
 links: https://openoil.iilab.org
 links-title: Website
-program: corporate structures, supply chain data
-tech: graph databases, linked open data, data collection workflows
-tool: neo4j, d3.js, structr, docker
-project: jira, github, user story mapping
+tags-program: corporate structures, supply chain data
+tags-tech: graph databases, linked open data, data collection workflows
+tags-tool: neo4j, d3.js, structr, docker
+tags-project: jira, github, user story mapping
 cover: work_openoil.png
 cover-caption: Company Ownership Graph
 images: openoil_bp.png, openoil_map.png, openoil_snepco.png

@@ -1,12 +1,16 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Control.Applicative ((<$>))
+import           Control.Applicative (empty, (<$>), liftA, liftA2)
+import           Control.Monad (join)
+import           Data.Maybe          (maybe, catMaybes, maybeToList, isJust)
 import           Data.Monoid         (Monoid, mempty, mconcat, (<>))
-import           Data.Map        (Map)
-import qualified Data.Map     as  M
+import           Data.List (find, isPrefixOf)
+import           Data.List.Split (splitOn)
+import qualified Data.Map.Strict as Map
+import           Data.String (fromString)  
 import           Hakyll
 import qualified Data.ByteString.Lazy.Char8 as LB
-import qualified Data.Text as T
+import qualified Data.Text as T   (pack, unpack, breakOn)
 import qualified Data.Text.Encoding as E
 import           Text.Jasmine
 import           Debug.Hood.Observe
@@ -41,7 +45,7 @@ main = hakyll $ do
             makeItem $ unlines (map itemBody (bootstrap:main:iilab:gray:carousel:transitions:animate:font:[] :: [Item String]))
 
 --  Copy IE HTML5 shims
-    match ("_assets/js/ie/*" .||. "_assets/js/*.map") $ do
+    match ("_assets/js/ie/*" .||. "_assets/js/*.map" .||. "_assets/js/onscroll.js") $ do
         route (gsubRoute "_assets/" (const ""))
         compile copyFileCompiler
 
@@ -59,13 +63,17 @@ main = hakyll $ do
             waypoints <- load "_assets/js/waypoints.min.js"
             waypointssticky <- load "_assets/js/waypoints-sticky.min.js"            
             carousel <- load "_assets/js/owl.carousel.min.js"
+            form <- load "_assets/js/jquery.form.js"
+            validate <- load "_assets/js/jquery.validate.min.js"
+            respond <- load "_assets/js/respond.min.js"
             isotope <- load "_assets/js/jquery.isotope.min.js"
+            infinite <- load "_assets/js/jquery.infinitescroll.min.js"
             easytabs <- load "_assets/js/jquery.easytabs.min.js"
             viewport <- load "_assets/js/viewport-units-buggyfill.js"            
             scripts <- load "_assets/js/theme_scripts.js"
-            iilab <- load "_assets/js/iilab.js"            
+            iilab <- load "_assets/js/iilab.js"
 --            concatItems (core:items) >>= withItemBody compressJsCompiler
-            makeItem $ unlines (map itemBody (((jquery:easing:bootstrap:hover:skrollr:skrollrstyle:waypoints:waypointssticky:carousel:isotope:easytabs:viewport:scripts:iilab:[])) :: [Item String]))
+            makeItem $ unlines (map itemBody (((jquery:easing:bootstrap:hover:skrollr:skrollrstyle:waypoints:waypointssticky:carousel:form:validate:respond:isotope:infinite:easytabs:viewport:scripts:iilab:[])) :: [Item String]))
 
 {--    match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
@@ -73,34 +81,42 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "_templates/default.html" defaultContext
             >>= relativizeUrls
 --}
-    match "_posts/blog/*" $ do
+    match "_posts/news/*" $ do
         route $ setExtension "html" `composeRoutes` (gsubRoute "_posts/" (const "")) 
-        compile $ pandocCompiler
-            >>= loadAndApplyTemplate "_templates/blog/content.html"    postCtx
-            >>= saveSnapshot "blog-content"
-            >>= loadAndApplyTemplate "_templates/blog/post.html"    postCtx
-            >>= loadAndApplyTemplate "_templates/default.html" postCtx
-            >>= relativizeUrls
+        compile $ do
+            projects <- recentFirst =<<
+                loadAllSnapshots "_posts/projects/*" "project-content"
+            let blogCtx =
+                    listField "projects" projectCtx (return projects) <>
+                    postCtx <>
+                    siteCtx <>
+                    defaultContext
+
+            pandocCompiler
+                >>= saveSnapshot "blog-content"
+                >>= loadAndApplyTemplate "_templates/news/content.html"  blogCtx
+                >>= loadAndApplyTemplate "_templates/news/post.html" blogCtx
+                >>= loadAndApplyTemplate "_templates/default.html" blogCtx
+                >>= relativizeUrls
 
     match "_posts/projects/*" $ do
         route $ setExtension "html" `composeRoutes` (gsubRoute "_posts/" (const ""))
         compile $ pandocCompiler
-            >>= loadAndApplyTemplate "_templates/project.html"    projectCtx
             >>= saveSnapshot "project-content"
+            >>= loadAndApplyTemplate "_templates/project.html"    projectCtx
             >>= loadAndApplyTemplate "_templates/default.html" projectCtx
             >>= relativizeUrls
-
 
     create ["index.html"] $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 10) . recentFirst =<<
-                loadAllSnapshots "_posts/blog/*" "blog-content"
-            projects <- fmap (take 10) . recentFirst =<<
+            posts <- recentFirst =<<
+                loadAllSnapshots "_posts/news/*" "blog-content"
+            projects <- recentFirst =<<
                 loadAllSnapshots "_posts/projects/*" "project-content"
             let indexCtx =
                     listField "posts" postCtx (return posts) <>
-                    listField "projects" postCtx (return projects) <>
+                    listField "projects" projectCtx (return projects) <>
                     constField "title" "Innovative Technology for Social Impact" <>
                     siteCtx <>
                     defaultContext
@@ -111,19 +127,22 @@ main = hakyll $ do
                 >>= relativizeUrls
 
     -- Render blog index feed
-    create ["blog.html"] $ do
+    create ["news.html"] $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 10) . recentFirst =<<
+            posts <- recentFirst =<<
                 loadAllSnapshots "_posts/blog/*" "blog-content"
+            projects <- fmap (take 10) . recentFirst =<<
+                loadAllSnapshots "_posts/projects/*" "project-content"
             let ctx =
                     listField "posts" postCtx (return posts) <>
+                    listField "projects" projectCtx (return projects) <>
                     constField "title" "Blog" <>
                     siteCtx <>
                     defaultContext
 
             makeItem ""
-                >>= loadAndApplyTemplate "_templates/blog.html" ctx
+                >>= loadAndApplyTemplate "_templates/news.html" ctx
                 >>= loadAndApplyTemplate "_templates/default.html" ctx
                 >>= relativizeUrls
 
@@ -152,31 +171,76 @@ postCtx =
     dateField "month" "%b" <>
     dateField "year" "%Y" <>
     dateField "date" "%B %e, %Y" <>
-    teaserField "teaser" "blog-content" <>
+    listFieldWith "authors" authorCtx getAuthors <>
+    lessField "less" "blog-content" <>
+    moreField "more" "blog-content" <>
+    shorturlCtx <>
     testCtx <>
     formatCtx <>
+    postformatCtx <>
     iconCtx <>
     postImagesCtx <>
     siteCtx <>
     defaultContext
 
+--------------------------------------------------------------------------------
+
+shorturlCtx :: Context a
+shorturlCtx = field "shorturl" $ \item -> do
+    url <- getMetadataField' (itemIdentifier item) "url"
+    let shorturl = trim $ take 27 $ url 
+    return $ shorturl <> "..."
+--------------------------------------------------------------------------------
+
+authorCtx :: Context Staff
+authorCtx = field "key" ( return . key . itemBody ) <>
+            field "name" ( return . name . itemBody ) <>
+            field "description" ( return . description . itemBody ) <>
+            field "title" ( return . title . itemBody ) <>
+            field "twitter" ( return . twitter . itemBody ) <>
+            field "linkedin" ( return . linkedin . itemBody ) <>
+            field "github" ( return . github . itemBody ) <>
+            field "site" ( return . site . itemBody )
+
+getAuthors :: Item String -> Compiler [ Item Staff ]
+getAuthors item = do 
+    author_key <- getMetadataField' (itemIdentifier item) "author"
+    mapM makeItem $ filter (isKey author_key) staff
+    
+isKey :: String -> Staff -> Bool 
+isKey k stf = ( k == key stf )
 
 --------------------------------------------------------------------------------
+
 testCtx :: Context a
 testCtx = functionField "test" $  \x _ -> case x of
-                                  _     -> return "test empty!"
+                                  _    -> return "test empty!"
 
 --------------------------------------------------------------------------------
 formatCtx :: Context String
-formatCtx = field "blog" ( getFormat (== "blog") ) <>
-            field "social" ( getFormat (== "social") ) <> 
-            field "link" ( getFormat (== "link") ) <> 
-            field "tech" ( getFormat (== "tech") ) 
+formatCtx = field "blog" ( getFormat "blog" ) <>
+            field "social" ( getFormat "social" ) <> 
+            field "social" ( getFormat "link" ) <> 
+            field "tech" ( getFormat "tech" ) 
 
-getFormat :: (String -> Bool) -> Item String -> Compiler String
-getFormat f item = do 
+getFormat :: String -> Item String -> Compiler String
+getFormat str item = do 
     format <- getMetadataField' (itemIdentifier item) "format"
-    return (if f format then "true" else "")
+    if (== str) format then return format else empty
+
+
+--------------------------------------------------------------------------------
+postformatCtx :: Context a
+postformatCtx = field "post-format" $ \item -> do
+    format <- getMetadataField (itemIdentifier item) "format"
+    -- Inspect metadata and decide title based on that
+    case format of 
+        Just "blog" -> return "blog"
+        Just "social" -> return "social"
+        Just "link" -> return "social"
+        Just "tech" -> return "tech"
+        Just "format" -> return "wat?"
+        Nothing -> return "edit"
 
 --------------------------------------------------------------------------------
 iconCtx :: Context a
@@ -186,7 +250,7 @@ iconCtx = field "icon-format" $ \item -> do
     case format of 
         Just "blog" -> return "edit"
         Just "social" -> return "quote"
-        Just "link" -> return "link"
+        Just "link" -> return "quote"
         Just "tech" -> return "tools"
         Just "format" -> return "wat?"
         Nothing -> return "edit"
@@ -197,10 +261,10 @@ postImagesCtx = listFieldWith "images" (imageCtx) getImages
 
 getImages :: Item String -> Compiler [Item (String,String)]
 getImages item = do
-        src <- getMetadataField' (itemIdentifier item) "images"
-        caption <- getMetadataField' (itemIdentifier item) "images-caption"
-        srcs <- return $ map (trim . T.unpack) $ T.splitOn "," ( T.pack src )
-        captions <- return $ map (trim . T.unpack) $ T.splitOn "|" ( T.pack caption )
+        maybesrc <- getMetadataField (itemIdentifier item) "images"
+        maybecaption <- getMetadataField (itemIdentifier item) "images-caption"
+        srcs <- return $ map trim $ maybe [] (splitOn ",") maybesrc 
+        captions <- return $ map trim $ maybe [] (splitOn "|") maybecaption
         imgs <- return $ zipPad srcs captions
         mapM makeItem imgs
 
@@ -247,7 +311,7 @@ siteCtx = mconcat
     , constField "site.contact.email" "contact@iilab.org"
     , constField "site.contact.phone" "+44 7429 144 691"
     , constField "site.contact.address1" "iilab London<br> Unit 36, 88-90 Hatton Garden<br> London EC1N 8PN - United Kingdom"
-    , constField "site.contact.address2" "iilab Berlin<br> Thinkfarm Berlin, Oranienstraße 183, Aufgang C, 3. OG<br>10999 Berlin - Germany"
+    , constField "site.contact.address2" "iilab Berlin<br> Straßburger Straße 29<br>10405 Berlin - Germany"
     , constField "site.contact.registration" "Registered in England & Wales. <br> Reg. No: 08332887. VAT No: GB172453217"
     , constField "author.name" "Jun Matsushita"
     , constField "author.github" "jmatsushita"
@@ -262,10 +326,12 @@ siteCtx = mconcat
     , constField "social.facebook" "http://www.facebook.com/iilab.org"
     , constField "social.twitter" "http://twitter.com/iilab"
     , constField "social.envelope" "mailto:contact@iilab.org"
-    , constField "programs.access" "Access"
-    , constField "programs.security" "Security"
-    , constField "programs.decision" "Decision Support"
-    , constField "programs.collaboration" "Collaboration"
+    , listField "programs" 
+                ( mconcat [ field "key" $ return . fst . itemBody
+                          , field "name" $ return . snd . itemBody ] )
+                ( return [ Item (fromString "innovation") ("innovation", "Information Innovation") 
+                         , Item (fromString "rights") ("rights", "Rights Enabling Tech") 
+                         , Item (fromString "community") ("community", "Community Enabling Tech") ])
     , constField "hero.tagline" "Innovative Technology<br/> for Social Impact"
     , constField "hero.description" "We harness information innovation<br/>to help your social good initiatives<br/> improve their human impact"
     , constField "hero.button" "Contact Us"
@@ -283,56 +349,213 @@ siteCtx = mconcat
     , constField "team.description" "We harness multi-disciplinarity, systems and design thinking to create services and products that improve the lives of citizens."
     , constField "contributors.title" "Our Contributors"
     , constField "contributors.description" "We are stronger because we're part of the open source community. We're working with passionate and visonary developers, designers and thinkers from the open source and free culture movements."
-    , constField "persons.jun.name" "Jun Matsushita"
-    , constField "persons.jun.title" "CEO, Founder"
-    , constField "persons.jun.description" "Jun has been advising international non-profits, humanitarian organisations and media organisations, in the use of innovation and technology for more than 16 years in Paris, New York and London. His technical expertise ranges from system and network administration, web and telephony platforms, to digital security and knowledge management."
-    , constField "persons.jun.twitter" "https://twitter.com/jmatsushita"
-    , constField "persons.jun.linkedin" "http://www.linkedin.com/in/jmatsushita"
-    , constField "persons.jun.github" "https://github.com/jmatsushita"
-    , constField "persons.jun.site" "https://iilab.org"
-    , constField "persons.kat.name" "Kat Austen"
-    , constField "persons.kat.title" "Head of Research and Design"
-    , constField "persons.kat.description" "Kat is a person. She’s interested in lots of things and phenomena, how things are connected, and why they are connected. She likes patterns but doesn’t have to have them. In the temporal melting-pot of her life so far she has been a scientist, an artist, a journalist and a writer. She welcomes a humane and environmentally kind future."
-    , constField "persons.kat.twitter" "https://twitter.com/katausten"
-    , constField "persons.kat.linkedin" "http://de.linkedin.com/pub/kat-austen/4/579/216"
-    , constField "persons.kat.github" "https://github.com/iamkat"
-    , constField "persons.kat.site" "http://katausten.com"
-    , constField "person_contributors.alex.name" "Alex Shure"
-    , constField "person_contributors.alex.description" "Alex Shure is a skilled craftsman and inventor active in the field of open source hardware within many different projects. As a human-nerd-interactor he pushes open source beyond the world of software - to infinity and beyond, starting with Open Source Ecology Germany and the Open it Agency."
-    , constField "person_contributors.alex.site" "http://etemu.com/"
-    , constField "person_contributors.alex.twitter" "https://twitter.com/AlexShure"
-    , constField "person_contributors.alex.github" "https://github.com/aShure"
-    , constField "person_contributors.alex.projects" "open-droplet"
-    , constField "person_contributors.alex.affiliations" "Open Source Ecology Germany|http://opensourceecology.de/,Open it agency|http://openitagency.eu/"
-    , constField "person_contributors.elf.name" "elf Pavlik"
-    , constField "person_contributors.elf.description" "#hacker / #elf - living strictly #moneyless and #stateless already for over 5 years! @hackers4peace @polyeconomy #WorldPeaceGame #ZeroWaste"
-    , constField "person_contributors.elf.site" "http://etemu.com/"
-    , constField "person_contributors.elf.twitter" "https://twitter.com/AlexShure"
-    , constField "person_contributors.elf.github" "https://github.com/elf-pavlik"
-    , constField "person_contributors.elf.projects" "open-oil-framework"
-    , constField "person_contributors.elf.affiliations" "Hackers4peace|http://hackers4peace.net/,PolyEconomy|http://polyeconomy.info/"
-    , constField "person_contributors.sam.name" "Sam Muirhead"
-    , constField "person_contributors.sam.twitter" "https://twitter.com/cameralibre"
-    , constField "person_contributors.sam.github" "https://github.com/samoos"
-    , constField "person_contributors.sam.description" "I make all sorts of videos – but I have a focus on using, explaining and promoting Free/Libre/Open Source Software, Free Culture, Open Knowledge and Open Source Hardware. In 2012/13 I lived a Year of Open Source, I’m part of the Open It Agency, and I also run post-production workshops with free software!"
-    , constField "person_contributors.sam.site" "http://cameralibre.cc/"
-    , constField "person_contributors.sam.projects" "open-droplet"
-    , constField "person_contributors.sam.affiliations" "Year Of Open Source|http://yearofopensource.net,Open it agency|http://openitagency.eu/"
-    , constField "partners.atchai.name" "Atchai"
-    , constField "partners.atchai.link" "http://www.atchai.com/"
-    , constField "partners.engineroom.name" "The Engine Room"
-    , constField "partners.engineroom.link" "https://www.theengineroom.org/"
-    , constField "partners.greenhost.name" "Greenhost"
-    , constField "partners.greenhost.link" "https://greenhost.net/"
-    , constField "partners.resurgence.name" "Resurgence"
-    , constField "partners.resurgence.link" "http://resurgence.io"
-    , constField "partners.ipl.name" "Internet Protection Lab"
-    , constField "partners.ipl.link" "http://www.internetprotectionlab.net/"
-    , constField "partners.gfmd.name" "Global Forum for Media Development"
-    , constField "partners.gfmd.link" "http://gfmd.info"
+    , listField "staff"
+                ( mconcat [ field "key" $ return . key . itemBody 
+                          , boolField "offset" $ offset . itemBody
+                          , field "name" $ return .name . itemBody 
+                          , field "title" $ return .title . itemBody 
+                          , field "description" $ return . description . itemBody
+                          , field "twitter" $ return . twitter . itemBody
+                          , field "linkedin" $ return . linkedin . itemBody
+                          , field "github" $ return . github . itemBody
+                          , field "site" $ return . site . itemBody ] )
+                ( mapM makeItem staff )
+    , listField "contributors"
+                ( mconcat [ field "key" $ return . Map.findWithDefault "" "key" . itemBody 
+                          , field "name" $ return . Map.findWithDefault "" "name" . itemBody 
+                          , field "description" $ return . Map.findWithDefault "" "description" . itemBody
+                          , field "projects" $ return . Map.findWithDefault "" "projects" . itemBody
+-- 
+-- It's unclear how I can nest listFields 
+-- listField :: String -> Context a -> Compiler [Item a] -> Context b
+-- makeItem :: a -> Compiler (Item a)
+--
+-- mapM :: Monad m => (a -> m b) -> [a] -> m [b]
+-- sequence :: Monad m => [m a] -> m [a]
+
+-- 
+-- mapM makeItem :: [a] -> Compiler [Item a]
+-- 
+-- I'd like to transform the Map item into a list of its own that can be used as the Compilter [Item a] that would be fed to the inner listField.
+-- So maybe I need to provide a curried function as the third parameter of listField that will compose with what is fed to it by the outer listField 
+-- The type signature of the curred function would be:
+-- Item a -> Compiler [Item a]
+-- 
+-- itemBody :: Item a -> a
+-- Map.findWithDefault "" "affiliations" :: Map.Map [Char] [Char] -> [Char]
+-- (splitOn ",") :: String [String]
+-- 
+-- It's a partial applicaiton thing
+-- When the last argument is not passed i.e. 
+-- listField "name" someCtx 
+--
+-- then the function seems properly curried and waits for its third argument provided by the sequence (by the implementation of listField?).
+-- The key was to use listFieldWith !!!
+--
+                          , listFieldWith "affiliations" ( mconcat [ field "key" $ return . T.unpack . fst . (T.breakOn $ T.pack "|") <$> T.pack . itemBody
+                                                               , field "site" $ return . T.unpack . snd . (T.breakOn $ T.pack "|") <$> T.pack . itemBody ] ) 
+                                                         ( mapM makeItem . (splitOn ",") . Map.findWithDefault "" "affiliations" . itemBody ) 
+                          , field "twitter" $ return . Map.findWithDefault "" "twitter" . itemBody
+                          , field "linkedin" $ return . Map.findWithDefault "" "linkedin" . itemBody
+                          , field "github" $ return . Map.findWithDefault "" "github" . itemBody
+                          , field "site" $ return . Map.findWithDefault "" "site" . itemBody ] )
+                ( sequence [ makeItem ( Map.fromList [ ( "key", "alex")
+                                                     , ( "name", "Alex Shure")
+                                                     , ( "projects", "open-droplet")
+                                                     , ( "affiliations", "Open Source Ecology Germany|http://opensourceecology.de/,Open it agency|http://openitagency.eu/")
+                                                     , ( "description", "Alex Shure is a skilled craftsman and inventor active in the field of open source hardware within many different projects. As a human-nerd-interactor he pushes open source beyond the world of software - to infinity and beyond, starting with Open Source Ecology Germany and the Open it Agency.")
+                                                     , ( "twitter", "https://twitter.com/AlexShure")
+                                                     , ( "linkedin", "http://www.linkedin.com/in/jmatsushita" )
+                                                     , ( "github", "https://github.com/aShure" )
+                                                     , ( "site", "http://etemu.com/") ] )
+                           , makeItem ( Map.fromList [ ( "key", "elf")
+                                                     , ( "name", "elf Pavlik")
+                                                     , ( "projects", "open-oil-framework")
+                                                     , ( "affiliations", "Hackers4peace|http://hackers4peace.net/,PolyEconomy|http://polyeconomy.info/" )
+                                                     , ( "description", "#hacker / #elf - living strictly #moneyless and #stateless already for over 5 years! @hackers4peace @polyeconomy #WorldPeaceGame #ZeroWaste")
+                                                     , ( "twitter", "https://twitter.com/elfpavlik")
+                                                     , ( "linkedin", "http://de.linkedin.com/pub/kat-austen/4/579/216" )
+                                                     , ( "github", "https://github.com/elf-pavlik" )
+                                                     , ( "site", "https://wwelves.org/perpetual-tripper/") ] )
+                           , makeItem ( Map.fromList [ ( "key", "sam")
+                                                     , ( "name", "Sam Muirhead")
+                                                     , ( "projects", "open-droplet")
+                                                     , ( "affiliations", "Year Of Open Source|http://yearofopensource.net,Open it agency|http://openitagency.eu/")
+                                                     , ( "description", "I make all sorts of videos – but I have a focus on using, explaining and promoting Free/Libre/Open Source Software, Free Culture, Open Knowledge and Open Source Hardware. In 2012/13 I lived a Year of Open Source, I’m part of the Open It Agency, and I also run post-production workshops with free software!")
+                                                     , ( "twitter", "https://twitter.com/cameralibre")
+                                                     , ( "linkedin", "http://de.linkedin.com/pub/kat-austen/4/579/216" )
+                                                     , ( "github", "https://github.com/samoos" )
+                                                     , ( "site", "http://cameralibre.cc/") ] )
+                           ])
+    , listField "partners"
+                ( mconcat [ field "key" $ return . partner_key . itemBody 
+                          , field "name" $ return . partner_name . itemBody 
+                          , field "link" $ return . partner_link . itemBody ] )
+                ( mapM makeItem partners )
     , defaultContext
     ]
 
+--------------------------------------------------------------------------------
+
+
+-- Instead of the Map syntax let's try Records.
+
+data Partner = Partner { partner_key :: String
+                       , partner_name :: String
+                       , partner_link :: String
+                       } 
+
+partners = [ Partner { partner_key = "atchai"
+                     , partner_name = "Atchai"
+                     , partner_link = "http://www.atchai.com/"
+                     }
+           , Partner { partner_key = "ucl"
+                     , partner_name = "University College London"
+                     , partner_link = "https://www.ucl.ac.uk/"
+                     }
+           , Partner { partner_key = "engineroom"
+                     , partner_name = "The Engine Room"
+                     , partner_link = "https://www.theengineroom.org/"
+                     }
+           , Partner { partner_key = "greenhost"
+                     , partner_name = "Greenhost"
+                     , partner_link = "https://greenhost.net/"
+                     }
+           , Partner { partner_key = "resurgence"
+                     , partner_name = "Resurgence"
+                     , partner_link = "http://resurgence.io"
+                     }
+           , Partner { partner_key = "ipl"
+                     , partner_name = "Internet Protection Lab"
+                     , partner_link = "http://www.internetprotectionlab.net/"
+                     }
+           , Partner { partner_key = "gfmd"
+                     , partner_name = "Global Forum for Media Development"
+                     , partner_link = "http://gfmd.info"
+                     }
+           ]
+
+
+data Staff = Staff { key :: String
+                   , name :: String
+                   , offset :: Bool
+                   , title :: String
+                   , description :: String
+                   , twitter :: String
+                   , linkedin :: String
+                   , github :: String
+                   , site :: String
+                   }
+
+staff = [ Staff { key = "jun"
+                , name = "Jun Matsushita"
+                , offset = True
+                , title = "CEO, Founder"
+                , description = "Jun has been advising international non-profits, humanitarian organisations and media organisations, in the use of innovation and technology for more than 16 years in Paris, New York and London. His technical expertise ranges from system and network administration, web and telephony platforms, to digital security and knowledge management."
+                , twitter = "https://twitter.com/jmatsushita"
+                , linkedin = "http://www.linkedin.com/in/jmatsushita"
+                , github = "https://github.com/jmatsushita"
+                , site = "https://iilab.org"
+                }
+        , Staff { key = "kat"
+                , name = "Kat Austen"
+                , offset = False
+                , title = "Head of Research and Design"
+                , description = "Kat is a person. She’s interested in lots of things and phenomena, how things are connected, and why they are connected. She likes patterns but doesn’t have to have them. In the temporal melting-pot of her life so far she has been a scientist, an artist, a journalist and a writer. She welcomes a humane and environmentally kind future."
+                , twitter = "https://twitter.com/katausten"
+                , linkedin = "http://de.linkedin.com/pub/kat-austen/4/579/216"
+                , github = "https://github.com/iamkat"
+                , site = "http://katausten.com" 
+                } 
+        ]
+
+
+--------------------------------------------------------------------------------
+-- | A context with "teaser" key which contain a teaser of the item.
+-- The item is loaded from the given snapshot (which should be saved
+-- in the user code before any templates are applied).
+lessField :: String           -- ^ Key to use
+            -> Snapshot         -- ^ Snapshot to load
+            -> Context String   -- ^ Resulting context
+lessField key snapshot = field key $ \item -> do
+    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
+    case needlePrefix "<!--more-->" body of
+        Nothing -> return body
+        Just t -> return t
+
+--------------------------------------------------------------------------------
+-- | A context with "teaser" key which contain a teaser of the item.
+-- The item is loaded from the given snapshot (which should be saved
+-- in the user code before any templates are applied).
+moreField :: String           -- ^ Key to use
+            -> Snapshot         -- ^ Snapshot to load
+            -> Context String   -- ^ Resulting context
+moreField key snapshot = field key $ \item -> do
+    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
+    case needleSuffix "<!--more-->" body of
+        Nothing -> return ""
+        Just t -> return t
+
+--------------------------------------------------------------------------------
+-- | Find the first instance of needle (must be non-empty) in haystack. We
+-- return the suffix of haystack after needle is matched.
+--
+-- Examples:
+--
+-- > needleSuffix "cd" "abcde" = "e"
+--
+-- > needleSuffix "ab" "abc" = "c"
+--
+-- > needleSuffix "ab" "xxab" = ""
+--
+-- > needleSuffix "a" "xx" = ""
+needleSuffix :: String -> String -> Maybe String
+needleSuffix needle haystack = go [] haystack
+  where
+    go _   []                     = Nothing
+    go acc xss@(x:xs)
+        | needle `isPrefixOf` xss = Just $ xss
+        | otherwise               = go (x : acc) xs
 --------------------------------------------------------------------------------
 
 zipPad :: (Monoid a, Monoid b) => [a] -> [b] -> [(a, b)]

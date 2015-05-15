@@ -21,3 +21,46 @@ $(document).ready(function () {
 	
 });
 
+/*===================================================================================*/
+/*	ISOTOPE BLOG
+/*===================================================================================*/
+
+
+$(document).ready(function () {
+	
+	var $container = $('.posts');
+	
+	$container.imagesLoaded(function () {
+		$container.isotope({
+			itemSelector: '.post'
+		});
+	});
+	
+  $('div.navigation a').click(function() {
+  	$container.isotope({ filter: '*' });
+  })
+
+	$('.format-filter li a, .format-wrapper a').click(function () {
+		
+		var selector = $(this).attr('data-filter');
+		
+		$container.isotope({
+			filter: selector
+		});
+		
+		$('.format-filter li a').removeClass('active');
+		$('.format-filter li a[data-filter="'+selector+'"]').addClass('active');
+		
+		$('html, body').animate({
+			scrollTop: $('.format-filter').offset().top -130
+		}, 600);
+		
+		return false;
+		
+	});
+	
+	$(window).on('resize', function () {
+		$('.posts').isotope('reLayout')
+	});
+	
+});

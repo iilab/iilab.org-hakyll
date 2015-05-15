@@ -9,18 +9,26 @@ $(document).ready(function() {
 	var s = skrollr;
 	var sActive = false;
 	
-	if ($(window).width() > 977) {
-		s.init();
+	if ($(window).width() > 1024) {
+		s.init({
+			mobileCheck: function() {
+				return false;
+			}
+		});
 		sActive = true;
 	}
 	
 	$(window).on('resize', function() {
-		if ($(window).width() < 977 && sActive) {
+		if ($(window).width() < 1024 && sActive) {
 			s.init().destroy();
 			sActive = false;
 		}
-		else if ($(window).width() > 977) {
-			s.init();
+		else if ($(window).width() > 1024) {
+			s.init({
+				mobileCheck: function() {
+					return false;
+				}
+			});
 			sActive = true;
 		}
 	});
@@ -370,49 +378,6 @@ $(document).ready(function () {
 
 
 /*===================================================================================*/
-/*	ANIMATIONS ON SCROLL
-/*===================================================================================*/
-
-$(document).ready(function() {
-	/*var waypointClass = '[class*="animate"]';
-	$(waypointClass).css({opacity: '0'});
-	
-	$(waypointClass).waypoint(function() {
-		var animationClass = $(this).attr('class').split('animate-')[1];
-		var delayTime = $(this).data('delay');
-		$(this).delay(delayTime).queue(function(next){
-			$(this).toggleClass('animated');
-			$(this).toggleClass(animationClass);
-			next();
-		});
-	},
-	{
-		offset: '90%',
-		triggerOnce: true
-	});*/
-	
-	var waypointClass = 'main [class*="col-"]';
-	var animationClass = 'fadeInUp';
-	var delayTime;
-	$(waypointClass).css({opacity: '0'});
-	
-	$(waypointClass).waypoint(function() {
-		delayTime += 100;
-		$(this).delay(delayTime).queue(function(next){
-			$(this).toggleClass('animated');
-			$(this).toggleClass(animationClass);
-			delayTime = 0;
-			next();
-		});
-	},
-	{
-		offset: '90%',
-		triggerOnce: true
-	});
-});
-
-
-/*===================================================================================*/
 /*	ISOTOPE PORTFOLIO
 /*===================================================================================*/
 
@@ -424,6 +389,17 @@ $(document).ready(function () {
 		$container.isotope({
 			itemSelector: '.item'
 		});
+	});
+	
+	var resizeTimer;
+	
+	function resizeFunction() {
+		$container.isotope('reLayout');
+	}
+	
+	$(window).resize(function() {
+		clearTimeout(resizeTimer);
+		resizeTimer = setTimeout(resizeFunction, 100);
 	});
 	
 	$('.portfolio .filter li a').click(function () {
@@ -521,7 +497,7 @@ $(document).ready(function () {
 /*===================================================================================*/
 /*	ISOTOPE BLOG
 /*===================================================================================*/
-
+/*
 $(document).ready(function () {
 	
 	var $container = $('.posts');
@@ -556,7 +532,7 @@ $(document).ready(function () {
 	});
 	
 });
-
+*/
 
 /*===================================================================================*/
 /*	TABS
@@ -671,44 +647,30 @@ $(document).ready(function () {
 
 
 /*===================================================================================*/
+/*	ANIMATED / SMOOTH SCROLL TO ANCHOR
+/*===================================================================================*/
+
+$(document).ready(function() {
+	
+	$("a.scrollTo").click(function() {
+		$("html, body").animate({
+			scrollTop: $($(this).attr("href")).offset().top + "px"
+		}, {
+			duration: 1000,
+			easing: "easeInOutCubic"
+		});
+		return false;
+	});
+	
+});
+
+
+/*===================================================================================*/
 /*	IMAGE HOVER
 /*===================================================================================*/
 
 $(document).ready(function () {
 	$('.icon-overlay a').prepend('<span class="icn-more"></span>');
-});
-
-
-/*===================================================================================*/
-/*	FORM
-/*===================================================================================*/
-
-jQuery(document).ready(function ($) {
-	$('.forms').dcSlickForms();
-});
-
-$(document).ready(function () {
-	
-	$('.comment-form input[title], .comment-form textarea').each(function () {
-		
-		if ($(this).val() === '') {
-			$(this).val($(this).attr('title'));
-		}
-		
-		$(this).focus(function () {
-			if ($(this).val() == $(this).attr('title')) {
-				$(this).val('').addClass('focused');
-			}
-		});
-		
-		$(this).blur(function () {
-			if ($(this).val() === '') {
-				$(this).val($(this).attr('title')).removeClass('focused');
-			}
-		});
-		
-	});
-	
 });
 
 
@@ -735,30 +697,72 @@ $(document).ready(function () {
 
 
 /*===================================================================================*/
-/*	GOOGLE MAPS
-/*===================================================================================
-
-$(document).ready(function () {
-	
-	function initialize() {
-		var mapOptions = {
-			zoom: 13,
-			center: new google.maps.LatLng(40.7902778, -73.9597222),
-			disableDefaultUI: true
-		}
-		var map = new google.maps.Map(document.getElementById('map'), mapOptions);
-	}
-	
-	google.maps.event.addDomListener(window, 'load', initialize);
-	
-});
-
-*/
-
-/*===================================================================================*/
 /*	CONVERTING iOS SAFARI VIEWPORT UNITS (BUGGY) INTO PIXELS
 /*===================================================================================*/
 
 $(document).ready(function () {
-	window.viewportUnitsBuggyfill.init(true);
+	window.viewportUnitsBuggyfill.init();
+});
+
+
+/*===================================================================================*/
+/*	FORM VALIDATION
+/*===================================================================================*/
+
+$(document).ready(function() {
+	
+	$('#contactform, #commentform').validate({
+		
+		errorPlacement: function(error, element) {  
+			$(element).attr({
+				'placeholder' : error.html()
+			});
+		},
+		
+		focusInvalid: false,
+		
+		rules: {
+			name: {
+				required: true,
+				minlength: 2
+			},
+			email: {
+				required: true,
+				email: true
+			},
+			message: {
+				required: true,
+				minlength: 10
+			}
+		},
+		
+		messages: {
+			name: {
+				required: 'Please enter your name!',
+				minlength: jQuery.format('Name requires at least {0} characters!')
+			},
+			email: {
+				required: 'Please enter your email!',
+				email: 'Please enter a valid email!'
+			},
+			message: {
+				required: 'Please enter a message!',
+				minlength: jQuery.format('Message requires at least {0} characters!')
+			}
+		},
+		
+		submitHandler: function(form) {
+			$('#contactform .btn-submit').html('Sending message ...');
+			$('#commentform .btn-submit').html('Sending comment ...');
+			$(form).ajaxSubmit({
+				success: function(responseText, statusText, xhr, $form) {
+					$(form).delay(1300).slideUp('fast');
+					$('#response').html(responseText).hide().delay(1300).slideDown('fast');
+				}
+			});
+			return false;
+		}
+		
+	});
+	
 });

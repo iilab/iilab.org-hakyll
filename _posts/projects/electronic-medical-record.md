@@ -5,11 +5,11 @@ date: 2013-10-01
 end-date: 
 collection: projects
 template: project.html
-program: access
-program: medical record, epidemiological data
-tech: hf radio modem, embedded servers, data synchronisation
-tool: couchdb, kanso.js, debian, docker, uucp, ansible, nagios, collectd
-project: jira, github, aha, etherpad
+program: community
+tags-program: medical record, epidemiological data
+tags-tech: hf radio modem, embedded servers, data synchronisation
+tags-tool: couchdb, kanso.js, debian, docker, uucp, ansible, nagios, collectd
+tags-project: jira, github, aha, etherpad
 client: Lake Tanganyika Floating Health Clinic
 client-link: http://floatingclinic.org
 client-logo: ltfhclogo.png

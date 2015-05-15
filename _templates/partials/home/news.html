@@ -1,0 +1,117 @@
+			<section id="blog" class="light-bg">
+				<div class="container inner inner-bottom inner-bottom-sm">
+					<div class="row">
+						<div class="col-md-8 col-sm-9 center-block text-center">
+							<header>
+								<h1>News</h1>
+                <p>Read about iilab's projects in blog posts, engineering posts<br> and social media highlights.</p>
+							</header>
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+				</div><!-- /.container -->
+
+				<div class="container inner-top-sm inner-top">
+					
+					<div class="row inner-bottom-xs">
+						<div class="col-sm-12">	
+							<ul class="format-filter text-center">
+								<li><a class="active" href="#" data-filter="*" title="All" data-rel="tooltip" data-placement="top"><i class="icon-th"></i></a></li>
+								<li><a href="#" data-filter=".format-blog" title="Blog Posts" data-rel="tooltip" data-placement="top"><i class="icon-edit"></i></a></li>
+								<li><a href="#" data-filter=".format-tech" title="Engineering" data-rel="tooltip" data-placement="top"><i class="icon-tools"></i></a></li>
+								<li><a href="#" data-filter=".format-social" title="Social Media" data-rel="tooltip" data-placement="top"><i class="icon-quote"></i></a></li>
+							</ul><!-- /.format-filter -->
+						</div><!-- /.col -->
+					</div><!-- /.row -->
+					
+					<div class="row">
+						<div class="col-sm-12">
+							
+							<div class="grid-blog col-3 no-sidebar">
+								<div class="posts">
+
+								$for(posts)$
+									
+									<div class="post format-$post-format$">
+										
+										<div class="post-content">
+											$if(images)$
+											<div class="owl-news owl-carousel owl-inner-pagination owl-inner-nav post-media">
+												
+												$for(images)$
+												<div class="item">
+													<figure>
+														<img src="/images/news/$src$" alt="">
+													</figure>
+												</div><!-- /.item -->
+												$endfor$
+												
+											</div><!-- /.owl-carousel -->
+
+											$endif$
+											
+										  $if(social)$
+												<ul class="meta">
+	                        <li class="categories">Social Media</li>
+													<li class="date">$month$ $day$, $year$</li>
+														$if(tags)$<li class="categories">$tags$</li>$endif$
+														$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
+												</ul><!-- /.meta -->
+												$if(url)$
+													<h2 class="post-title">
+														<a href="$url$">$title$</a>
+													</h2>
+												$else$
+													<h2 class="post-title">
+														<a href="/news/$slug$.html">$title$</a>
+													</h2>
+												$endif$
+												<blockquote>$less$</blockquote> 
+										  $else$
+												$if(url)$
+													<h2 class="post-title">
+														<a href="$url$">$title$</a>
+													</h2>
+												$else$
+													<h2 class="post-title">
+														<a href="/news/$slug$.html">$title$</a>
+													</h2>
+												$endif$
+												<ul class="meta">
+		                      $if(blog)$
+		                        <li class="categories">Blog</li>
+		                      $endif$
+		                      $if(tech)$
+		                        <li class="categories">Engineering</li>
+		                      $endif$
+													<li class="date">$month$ $day$, $year$</li>
+													$if(tags)$<li class="categories">$tags$</li>$endif$
+													$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
+												</ul><!-- /.meta -->
+												<p>$less$</p> 
+											$endif$
+
+											$if(url)$
+												<a href="$url$" class="btn">Read more</a>
+											$else$
+												<a href="/news/$slug$.html" class="btn">Read more</a>
+											$endif$
+																																	
+										</div><!-- /.post-content --> 
+										
+									</div><!-- /.post -->
+
+								$endfor$
+								
+								</div><!-- /.posts -->
+							</div><!-- /.grid-blog -->
+							
+							
+						</div><!-- /.col -->
+						<div class="navigation" style="display:none;">
+							<a class="btn btn-large">See Older News</a>
+						</div>
+					</div><!-- /.row -->
+					
+				</div><!-- /.container -->
+			</section>
+						

@@ -12,32 +12,31 @@
 					
 					<div class="row inner-top-sm text-center">
 					
-					$for()$	
+					$for(contributors)$	
 						<div class="col-sm-4 inner-bottom-sm inner-left inner-right">
 							<figure class="member">
 								
 								<div class="">
-									<a href="$person.site$"><img src="assets/images/persons/$key$.jpg" class="img-circle"></a>
+									<a href="$site$"><img src="images/persons/$key$.jpg" class="img-circle"></a>
 								</div><!-- /.icon-overlay -->
 								
 								<figcaption>
 								
 									<h2>
-										$person.name$
-										<span>$person.title$</span>
+										$name$
 									</h2>
 			
-									<blockquote>$person.description$</blockquote>
+									<blockquote>$description$</blockquote>
 									
 									<ul class="social">
-										<li><a href="$person.twitter$"><i class="icon-s-twitter"></i></a></li>
-										<li><a href="$person.github$"><i class="icon-s-github"></i></a></li>
+										<li><a href="$twitter$"><i class="icon-s-twitter"></i></a></li>
+										<li><a href="$github$"><i class="icon-s-github"></i></a></li>
 									</ul><!-- /.social -->
 									
 									
 									<ul class="arrowed">
-										$for()$
-										<li><a href="$site$">$key $</a></li>
+										$for(affiliations)$
+										<li><a href="$site$">$key$</a></li>
 										$endfor$
 									</ul>
 						

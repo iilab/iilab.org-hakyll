@@ -15,23 +15,23 @@
 							
 							<ul class="filter text-center">
 								<li><a href="#" data-filter="*" class="active">All</a></li>
-								$for()$
+								$for(programs)$
 								<li><a href="#" data-filter=".$key$">$name$</a></li>
 								$endfor$
 							</ul><!-- /.filter -->
 							
 							<ul class="items col-3">
-								$for()$
-								<li class="item thumb $project.program$">
-									<a href="/projects/$project.slug$.html">
+								$for(projects)$
+								<li class="item thumb $program$">
+									<a href="/projects/$slug$.html">
 										<figure>
 											<figcaption class="text-overlay">
 												<div class="info">
-													<h4>$project.title$</h4>
-													<p>$programs[project.program]$</p>
+													<h4>$title$</h4>
+													<p>$program$</p>
 												</div><!-- /.info -->
 											</figcaption>
-											<img src="/images/projects/$project.cover[0].src$" alt="$project.cover[0].caption $">
+											<img src="/images/projects/$cover$" alt="$cover-caption$">
 										</figure>
 									</a>
 								</li><!-- /.item -->

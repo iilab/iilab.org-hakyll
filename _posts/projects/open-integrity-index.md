@@ -5,7 +5,7 @@ collection: projects
 template: project.html
 date: 2013-04-01
 end-date: 
-program: decision
+program: rights
 links: https://openintegrity.org
 links-title: Website
 partners: Tor Project, Guardian Project, Tactical Technology Collective, Open ITP, Internews

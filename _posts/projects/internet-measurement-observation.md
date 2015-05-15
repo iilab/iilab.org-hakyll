@@ -5,7 +5,7 @@ date: 2014-01-01
 end-date: 
 collection: projects
 template: project.html
-program: decision
+program: rights
 client: European Commision
 client-link: http://ec.europa.eu
 cover: work_ecsa.png

@@ -242,3 +242,169 @@ border-bottom: 1px solid #73879C;
   font-weight: 900;
   src: local('Lato Black'), local('Lato-Black'), url(https://themes.googleusercontent.com/static/fonts/lato/v7/G2uphNnNqGFMHLRsO_72ngLUuEpTyoUstqEm5AMlJo4.woff) format('woff');
 }
+
+.grid-blog.col-3.no-sidebar .post-content > .post-title {
+  margin-top: 40px;
+}
+
+#blog .post-content > h2.post-title {
+  margin-top: 40px;
+}
+
+.grid-blog.col-3.no-sidebar .post-content .meta {
+  padding-left: 40px;
+  padding-right: 40px;
+  margin-right: 5px;
+  margin-left: 0px;
+  margin-bottom: 25px;
+}
+
+#blog .inner-top .meta li {
+  display: inline;
+  margin: 0 0px;
+}
+
+#blog .inner-top .meta li.categories a:before, #blog .inner-top .meta li.categories:before {
+  margin-right: 0px;
+}
+
+#blog .inner-top .meta li a {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+#blog .inner-top .meta li a:before {
+  content: "";
+  font-family: "fontello";
+  margin-right: 0px;
+}
+
+#blog .inner-top .meta li:after {
+  content: "|";
+  margin-left: 12px;
+  margin-right: 6px;
+}
+
+#blog .inner-top .meta li:last-child:after {
+  content: "";
+  margin: 0;
+}
+
+#blog .inner-bottom .meta li {
+  display: inline;
+  margin: 0 0px;
+  margin-bottom:20px;
+}
+
+#blog .inner-bottom .meta li.categories a:before, #blog .inner-bottom .meta li.categories:before {
+  margin-right: 0px;
+}
+
+#blog .inner-bottom .meta li a {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+#blog .inner-bottom .meta li a:before {
+  content: "";
+  font-family: "fontello";
+  margin-right: 0px;
+}
+
+#blog .inner-bottom .meta li:after {
+  content: "|";
+  margin-left: 12px;
+  margin-right: 6px;
+}
+
+#blog .inner-bottom .meta li:last-child:after {
+  content: "";
+  margin: 0;
+}
+
+#blog .inner-bottom ul.meta {
+  margin-left: 0px;
+}
+
+
+.post.format-social {
+  background-color: #95A5A6;
+  color: #FFF;
+}
+.post.format-social .post-title {
+  color: #FFF;
+}
+
+.post.format-tech {
+  background-color: #2F4052;
+  color: #A3B1BF;
+}
+
+.post.format-tech:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: .05;
+  background: url("../images/art/pattern-background02.png");
+  z-index: -1;
+}
+.post.format-tech .post-title {
+  color: #FFF;
+}
+
+.format-social:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: .05;
+  background: url("../images/art/pattern-background03.png");
+  z-index: -1;
+}
+
+.format-social a:hover,
+.format-social a:focus {
+    color: #FFF;
+    text-decoration: none;
+}
+
+
+.post.format-gallery.tech h1, .post.format-gallery.tech h2, .post.format-gallery.tech h3 {
+  color: #FFF;
+}
+
+.post.format-gallery.tech .author {
+  color: #FFF;
+}
+
+.post.format-gallery.tech {
+  background-color: #2F4052;
+  color: #FFF;
+  z-index: 0;
+}
+
+.post.format-gallery.tech:before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  opacity: .05;
+  background: url("../images/art/pattern-background02.png");
+  z-index: -1;
+}
+
+#blog .format-social .post-content > h2.post-title {
+  margin-top: 20px;
+}
+
+#blog .format-social .post-content .meta {
+  margin-top: 40px;
+  margin-bottom: 0px;
+}

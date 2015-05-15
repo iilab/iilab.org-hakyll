@@ -5,11 +5,11 @@ date: 2013-10-01
 end-date: 
 collection: projects
 template: project.html
-program: security
-program: mobile, threat model, user experience
-tech: android, geolocation, continuous integration, acceptance testing
-tool: jenkins, maven, calabash, ADT, jekyll
-project: jira, github, aha 
+program: rights
+tags-program: mobile, threat model, user experience
+tags-tech: android, geolocation, continuous integration, acceptance testing
+tags-tool: jenkins, maven, calabash, ADT, jekyll
+tags-project: jira, github, aha 
 partners: Greenhost|Frontline Defenders|One Big Field|Joylab
 partners-link: https://greenhost.nl, https://www.frontlinedefenders.org/, http://onebigfield.com, http://joylab.com
 client: Amnesty International
