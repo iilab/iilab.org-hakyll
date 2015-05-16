@@ -1,23 +1,3 @@
----
-title: Open Integrity Index
-slug: open-integrity-index
-collection: projects
-template: project.html
-date: 2013-04-01
-start-date: 2013-04-01
-end-date: 
-program: rights
-links: https://openintegrity.org
-links-title: Website
-partners: Tor Project, Guardian Project, Tactical Technology Collective, Open ITP, Internews
-partners-link: https://torproject.org, https://guardianproject.info, https://tacticaltech.org, https://openitp.org, http://internews.org
-cover: work_oii.png
-cover-caption: Open Integrity Index Website
-images: work_oii.png
-images-caption: Open Integrity Index Website
-intro: The Open Integrity Index enables users to make sophisticated decisions about the tools they use for privacy and communications, without requiring a high-level security engineering background.
----
-
 ## What is the Open Integrity Index? 
 
 The Open Integrity Index enables users to make sophisticated decisions about the tools they use for privacy and communications, without requiring a high-level security engineering background.

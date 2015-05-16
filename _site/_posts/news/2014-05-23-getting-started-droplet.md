@@ -1,18 +1,3 @@
----
-title: Getting started on Droplet - An Open Hardware Water Flow Metre
-slug: 2014-05-23-getting-started-droplet
-date: 2014-05-23
-collection: news
-format: blog
-template: blog.html
-program: access
-tags: water, bluetooth low energy, open hardware, open design
-author: kat
-images: droplet-design.jpg, droplet-geiger.jpg, droplet-openairdesign.jpg, droplet-bike.jpg, droplet-schematics.jpg
-images-caption: Rubbery bike lights fixation could work for us.||||
-projects: open-droplet
----
-
 Water is one of the [world’s most stressed resources](https://www.un.org/waterforlifedecade/scarcity.shtml). Usage has shot up by more than double the rate of population increase, meaning we are guzzling more water per head than ever before.
 
 The impending crisis - which has already created a [“water war” in southern states of the US](http://www.waterwar.org/index.html) and been immortalised in award winning musical theatre production [Urine Town](http://www.mtishows.com/show_detail.asp?showid=000280) - has prompted varied reactions, from [cries over the privatisation](http://www.vancouverobserver.com/blogs/water/2011/02/03/what-does-privatization-water-look?page=0,1) of this most vital resource in reaction to the Water Sustainability Act in North America, to grass roots and stakeholder initiatives to improve water infrastructures, such as [Clean Water Action](http://www.cleanwateraction.org/) and the UN’s [Water Action Hub.](http://wateractionhub.org/)

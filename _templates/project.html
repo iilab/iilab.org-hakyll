@@ -1,6 +1,4 @@
-{% extends "_layouts/base.html" %}
-{% block body %}
-{% include "_layouts/includes/header.html" %}
+$partial("_templates/partials/header.html")$
 		<main>
 			<section id="portfolio-post">
 				<div class="container inner-top-md">
@@ -9,15 +7,15 @@
 						<div class="col-md-8">
 							<div id="owl-work" class="owl-carousel owl-inner-pagination owl-inner-nav owl-ui-md owl-one-item">
 								
-								$for()$
+								$for(images)$
 								<div class="item">
 									<figure>
-										<img src="/images/projects/$image.src$" alt="$image.caption $">
+										<img src="/images/projects/$src$" alt="$caption$">
 									</figure>
 								</div><!-- /.item -->
 								$endfor$
 							</div><!-- /.owl-carousel -->
-							<div class="post-project"><p class="text-small">$contents$</p></div>
+							<div class="post-project"><p class="text-small">$body$</p></div>
 						</div><!-- /.col -->
 
 						
@@ -26,31 +24,33 @@
 								<h2>$title$</h2>			
 								<p class="text-small">$intro$</p>				
 								<ul class="item-details inner-top-xs outer-top-xs border-top">
-									<li class="date">Date: $moment(date).format('YYYY.MM.DD')$$'- ' + moment(end-date).format('YYYY.MM.DD') if end-date else '- Current'$ </li>
-									$if(client)$<li class="client">Client: <a href="$client.link$">$client.name $</a></li>$endif$
-									$if(client.logo)$<li class="img"><a href="$client.link$"><img class="img-thumbnail" src="/images/projects/$client.logo$" alt="$client.name $"></a></li>$endif$
+									<li class="date">Date: $start-date$ $if(end-date)$ - $end-date$ $else$ - Current $endif$ </li>
+									$if(client)$<li class="client">Client: <a href="$client-link$">$client$</a></li>$endif$
+									$if(client-logo)$<li class="img"><a href="$client-link$"><img class="img-thumbnail" src="/images/projects/$client-logo$" alt="$client$"></a></li>$endif$
 								</ul><!-- /.item-details -->
-								$if(links)$
+								$if(project-links)$
 								<ul class="item-details inner-top-xs outer-top-xs border-top">
 									<li><h4>Project Links</h4></li>
-									$for()$
+									$for(project-links)$
+									  <li class="url"><a href="$link$">$title$</a></li>
+									$endfor$
 								</ul><!-- /.item-details -->
 								$endif$
-								$if(partners)$
+								$if(project-partners)$
 								<ul class="item-details inner-top-xs outer-top-xs border-top">
 									<li><h4>Project Partners</h4></li>
-									$for()$
+									$for(project-partners)$
+									  <li class="url"><a href="$link$">$partner$</a></li>
+									$endfor$
 								</ul><!-- /.item-details -->
 								$endif$
-								$if(tags)$
 								<ul class="item-details inner-top-xs outer-top-xs border-top">
 									<li><h4>Keywords</h4></li>
-									$if(tags.program)$<li class="categories">Program: $for()$</li>$endif$
-									$if(tags.tech)$<li class="categories">Tech: $for()$</li>$endif$
-									$if(tags.tool)$<li class="categories">Tools: $for()$</li>$endif$
-									$if(tags.project)$<li class="categories">Project: $for()$</li>$endif$
+									$if(tags-program)$<li class="categories">Program: $tags-program$</li>$endif$
+									$if(tags-tech)$<li class="categories">Tech: $tags-tech$</li>$endif$
+									$if(tags-tool)$<li class="categories">Tools: $tags-tool$</li>$endif$
+									$if(tags-project)$<li class="categories">Project: $tags-project$</li>$endif$
 								</ul><!-- /.item-details -->
-								$endif$
 							</header>
 						</div><!-- /.col -->
 						
@@ -60,14 +60,7 @@
 				
 			</section>
 
-			{% set isNews = false %}
-			$for()$
-				{% if ((item.projects) and (slug in (item.projects))) %}
-					{% set isNews = true %}
-				$endif$
-			$endfor$
-
-			$if((isNews))$
+			$if(posts)$
 			<section id="blog" class="light-bg">
 				<div class="container inner inner-bottom inner-bottom-sm">
 					<div class="row">
@@ -87,19 +80,18 @@
 							<div class="grid-blog col-3 no-sidebar">
 								<div class="posts">
 
-								$for()$
-									{% if ((item.projects) and (slug in (item.projects))) %}
+								$for(posts)$
 									
-									<div class="post format-$item.format$">
+									<div class="post format-$post-format$">
 										
 										<div class="post-content">
-											$if(item.images)$
+											$if(images)$
 											<div class="owl-news owl-carousel owl-inner-pagination owl-inner-nav post-media">
 												
-												$for()$
+												$for(images)$
 												<div class="item">
 													<figure>
-														<img src="/images/news/$img.src$" alt="">
+														<img src="/images/news/$src$" alt="">
 													</figure>
 												</div><!-- /.item -->
 												$endfor$
@@ -107,39 +99,59 @@
 											</div><!-- /.owl-carousel -->
 
 											$endif$
-											{% if item.format == "blog" %}
-											<h2 class="post-title">
-												<a href="/news/$item.slug$.html">$item.title $</a>
-											</h2>
-											$else$
-												$if(item.link)$
-												<h2 class="post-title">
-													<a href="$item.link$">$item.title $</a>
-												</h2>
+											
+										  $if(social)$
+												<ul class="meta">
+	                        <li class="categories">Social Media</li>
+													<li class="date">$month$ $day$, $year$</li>
+														$if(tags)$<li class="categories">$tags$</li>$endif$
+														$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
+												</ul><!-- /.meta -->
+												$if(url)$
+													<h2 class="post-title">
+														<a href="$url$">$title$</a>
+													</h2>
+												$else$
+													<h2 class="post-title">
+														<a href="/news/$slug$.html">$title$</a>
+													</h2>
 												$endif$
+												<blockquote>$less$</blockquote> 
+										  $else$
+												$if(url)$
+													<h2 class="post-title">
+														<a href="$url$">$title$</a>
+													</h2>
+												$else$
+													<h2 class="post-title">
+														<a href="/news/$slug$.html">$title$</a>
+													</h2>
+												$endif$
+												<ul class="meta">
+		                      $if(blog)$
+		                        <li class="categories">Blog</li>
+		                      $endif$
+		                      $if(tech)$
+		                        <li class="categories">Engineering</li>
+		                      $endif$
+													<li class="date">$month$ $day$, $year$</li>
+													$if(tags)$<li class="categories">$tags$</li>$endif$
+													$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
+												</ul><!-- /.meta -->
+												<p>$less$</p> 
 											$endif$
 
-											<ul class="meta">
-												<li class="date">$moment(item.date).format('MMM')$$moment(item.date).format('DD')$, $moment(item.date).format('YYYY')$</li>
-												$if(item.tags)$<li class="categories">$for()$$endif$</li>
-												$if(item.link)$<li class="link"><a href="$item.link$">$item.link|truncate(40) $</a></li>$endif$
-											</ul><!-- /.meta -->
-											
-											<p>$item.less$</p>
-											
-											{% if item.format == "blog" %}
-											<a href="/news/$item.slug$.html" class="btn">Read more</a>
+											$if(url)$
+												<a href="$url$" class="btn">Read more</a>
 											$else$
-												$if(item.link)$
-												<a href="$item.link$" class="btn">Read more</a>
-												$endif$
+												<a href="/news/$slug$.html" class="btn">Read more</a>
 											$endif$
 																																	
 										</div><!-- /.post-content --> 
 										
 									</div><!-- /.post -->
-									$endif$	
-								$endfor$								
+
+								$endfor$				
 							
 								</div><!-- /.posts -->
 							</div><!-- /.grid-blog -->
@@ -167,5 +179,4 @@
 			</section>
 
 		</main>
-{% include "_layouts/includes/footer.html" %}
-{% endblock %}
+$partial("_templates/partials/footer.html")$

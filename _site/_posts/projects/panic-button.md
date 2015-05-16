@@ -1,30 +1,3 @@
----
-title: Panic Button
-slug: panic-button
-date: 2013-10-01
-start-date: 2013-10-01
-end-date: 
-collection: projects
-template: project.html
-program: rights
-tags-program: mobile, threat model, user experience
-tags-tech: android, geolocation, continuous integration, acceptance testing
-tags-tool: jenkins, maven, calabash, ADT, jekyll
-tags-project: jira, github, aha 
-partners: the engine room,Greenhost,Frontline Defenders,One Big Field,Joylab
-partners-link: https://theengineroom.org | https://greenhost.nl| https://www.frontlinedefenders.org/| http://onebigfield.com| http://joylab.com
-client: Amnesty International
-client-link: https://amnesty.org
-client-logo: amnestylogo.jpg
-links: https://panicbutton.io, http://panicalert.tumblr.com/, https://play.google.com/store/apps/details?id=org.iilab.pb, https://github.com/iilab/PanicButton, https://report.panicbutton.io
-links-title: Website (panicbutton.io)|Blog|Download|Source|Issue Tracker
-cover: work_panicbutton.png
-cover-caption: Website
-images: work_panicbutton.png, panicbutton_sudan.jpg, panicbutton_photo.jpg
-images-caption: Website|Sudan|Philipinnes
-intro: Panic Button is an SMS alert application for Android that enables human rights defenders and other individuals at risk to get out a message and location information as fast as possible to their network in an emergency.
----
-
 > We think Panic Button is a tool that can be useful in countries like Sudan where mass arrests and detention of human rights defenders are common and where often families of the victims struggle to know the whereabouts of their loved one. <footer><cite>Participants from the East and Horn of Africa Human Rights Defenders network</cite></footer>
 
 <br>

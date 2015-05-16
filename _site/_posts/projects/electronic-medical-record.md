@@ -1,28 +1,3 @@
----
-title: Electronic Medical Record
-slug: electronic-medical-record
-date: 2013-10-01
-start-date: 2013-10-01
-end-date: 
-collection: projects
-template: project.html
-program: community
-tags-program: medical record, epidemiological data
-tags-tech: hf radio modem, embedded servers, data synchronisation
-tags-tool: couchdb, kanso.js, debian, docker, uucp, ansible, nagios, collectd
-tags-project: jira, github, aha, etherpad
-client: Lake Tanganyika Floating Health Clinic
-client-link: http://floatingclinic.org
-client-logo: ltfhclogo.png
-links: https://github.com/iilab/ltfhc-next
-links-title: Source code
-cover: work_ltfhc.jpg
-cover-caption: Hardware Integration
-images: ltfhc_hardware.jpg, ltfhc_antenna.jpg, ltfhc_radiocheck.jpg, ltfhc_software.png, ltfhc_reports.png
-images-caption: Hardware Integration|Hardware Integration|Hardware Integration|EMR Software|EMR Software|
-intro: Development of Hardware and Software solution for management of Electronic Medical Records with HF Radio Data synchronisation.
----
-
 > If you have 12 million who are living in the Lake Tanganyika Basin who can be treated for all the preventable and public health diseases as well as the direct issues of maternal health, we are talking about saving probably hundreds of thousands of lives over the course of the next ten years. <footer><cite>Dr. Amy Lehman, BBC interview May 2013</cite></footer>
 
 <br/>

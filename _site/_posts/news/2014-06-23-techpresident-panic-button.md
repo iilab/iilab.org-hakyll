@@ -1,0 +1,1 @@
+The concern for user safety is evident. Jun Matsushita, Founder and CEO of iilab, writes: The main trade off from a security standpoint is that the ability of the app to alert a user's trusted contacts rapidly is more relevant/important than the privacy of the user or their contacts.

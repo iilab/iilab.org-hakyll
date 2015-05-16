@@ -1,28 +1,3 @@
----
-title: Open Oil Data Framework
-slug: open-oil-framework
-date: 2014-07-01
-start-date: 2014-07-01
-end-date: 2014-09-01
-collection: projects
-template: project.html
-program: innovation
-client: Open Oil
-client-link: http://openoil.net
-client-logo: openoil_logo.png
-links: https://openoil.iilab.org
-links-title: Website
-tags-program: corporate structures, supply chain data
-tags-tech: graph databases, linked open data, data collection workflows
-tags-tool: neo4j, d3.js, structr, docker
-tags-project: jira, github, user story mapping
-cover: work_openoil.png
-cover-caption: Company Ownership Graph
-images: openoil_bp.png, openoil_map.png, openoil_snepco.png
-images-caption: BP's Corporate Structure|Open Oil Data Map|Shell Affiliate Details
-intro: iilab is developing a tool that can be used to facilitate investigations into the major corporate players in the extractive industries of certain countries including Nigeria, Tunisia and Mozambique. 
----
-
 > OpenOil believes that oil and gas production can benefit the citizens of producing countries more effectively, and the damage wrought by opaque and undemocratic government, often as a result of the prize to be obtained by controlling natural resource wealth, can be mitigated and reversed
 
 <br>

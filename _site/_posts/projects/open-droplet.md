@@ -1,23 +1,3 @@
----
-title: Open Droplet
-slug: open-droplet
-collection: projects
-template: project.html
-date: 2014-05-01
-start-date: 2014-05-01
-end-date: 
-program: community
-links: http://opendroplet.org
-links-title: Website
-partners: Resurgence, Etemu
-partners-link: http://resurgence.io| https://etemu.org
-cover: work_droplet.png
-cover-caption: Open Droplet Website
-images: work_droplet.png
-images-caption: Open Droplet Website
-intro: Open Droplet is an open source, open hardware water measurement sensor that is networked and easy to use.
----
-
 ## What is Open Droplet? 
 
 Open Droplet is an open source, open hardware water measurement sensor that is networked and easy to use.
