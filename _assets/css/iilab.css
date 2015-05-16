@@ -11,6 +11,39 @@ h6 {
     color: #656565;
 }
 
+.owl-carousel {
+  display: block;
+}
+
+#hero .item {
+  background-image: url(../images/medium/art/gingko.jpg);
+}
+
+
+@media only screen and ( min-width: 640px ) {
+
+  #hero .item {
+    background-image: url(../images/large/art/gingko.jpg);
+  }
+
+}
+
+@media only screen and (min-width: 1024px)  {
+
+  #hero .item {
+    background-image: url(../images/art/gingko.jpg);
+  }
+
+}
+
+.csstransitions main [class*="col-"] {
+  opacity: 1;
+}
+
+#partners .owl-carousel {
+  display: inline-flex;
+}
+
 .author {
     color: #656565;
 }
@@ -134,6 +167,38 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
     color: #333333;
 }
 
+.member .text-overlay .info .social li a:hover .icon-s-linkedin {
+    color: #DD4B39;
+    color: #DE5745;
+}
+.member .text-overlay .info .social li a:hover .icon-s-rss {
+    color: #00ACED;
+    color: #2FBBED;
+}
+
+
+.btn-share-lg:hover .icon-s-github:after,
+.btn-share-md:hover .icon-s-github:after,
+.btn-share-sm:hover .icon-s-github:after,
+.btn-share-xs:hover .icon-s-github:after {
+    background: #555555;
+    background: #333333;
+}
+.btn-share-lg:hover .icon-s-linkedin:after,
+.btn-share-md:hover .icon-s-linkedin:after,
+.btn-share-sm:hover .icon-s-linkedin:after,
+.btn-share-xs:hover .icon-s-linkedin:after {
+    background: #0077B5;
+    background: #0077B5;
+}
+.btn-share-lg:hover .icon-s-rss:after,
+.btn-share-md:hover .icon-s-rss:after,
+.btn-share-sm:hover .icon-s-rss:after,
+.btn-share-xs:hover .icon-s-rss:after {
+    background: #B5B5B5;
+    background: #B5B5B5;
+}
+
 .social a .icon-s-github:after {
     background: #555555;
     background: #333333;
@@ -142,6 +207,11 @@ select, textarea, input[type="text"], input[type="password"], input[type="dateti
 .social a .icon-s-linkedin:after {
     background: #0077B5;
     background: #0077B5;
+}
+
+.social a .icon-s-rss:after {
+    background: #B5B5B5;
+    background: #B5B5B5;
 }
 
 .post-content li a {
@@ -407,4 +477,22 @@ border-bottom: 1px solid #73879C;
 #blog .format-social .post-content .meta {
   margin-top: 40px;
   margin-bottom: 0px;
+}
+
+.iframeWrapper {
+  position: relative;
+  padding-bottom: 56.25%; /* 16:9 */
+  padding-top: 25px;
+  height: 0;
+}
+.iframeWrapper iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.piwik img {
+  float: left;
 }
