@@ -7,7 +7,6 @@ format: blog
 template: blog.html
 tags: panic button, #labtogether, betterplace
 author: jun
-images: pb-labtogether.jpg
 projects: panic-button
 ---
 

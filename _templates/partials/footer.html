@@ -1,4 +1,4 @@
-		<footer class="dark-bg">
+		<footer id="footer" class="dark-bg">
 			<div class="container inner">
 				<div class="row">
 
@@ -19,10 +19,10 @@
 								<figure class="icon-overlay icn-link">
 									<figcaption class="text-overlay">
 										<div class="info">
-											<p>$title$</h4>
+											<p>$title$</p>
 										</div><!-- /.info -->
 									</figcaption>
-									<img src="/images/projects/$cover$" alt="$cover-caption$">
+									<img src="/images/tiny/projects/$cover$" alt="$cover-caption$">
 								</figure>
 								</a>
 							</div><!-- /.thumb -->
@@ -42,7 +42,48 @@
 
 					<div class="col-md-3 col-sm-6 inner">
 						<h4>Stay in touch</h4>
-						<p>Receive updates about our projects.</p>
+						<p>On social networks and via rss.</p>
+
+						<div id="share" class="row">
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.facebook$" class="btn-share-sm">
+									<i class="icon-s-facebook"></i>
+								</a>
+							</div><!-- /.col -->
+							
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.twitter$" class="btn-share-sm">
+									<i class="icon-s-twitter"></i>
+								</a>
+							</div><!-- /.col -->
+							
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.gplus$" class="btn-share-sm">
+									<i class="icon-s-gplus"></i>
+								</a>
+							</div><!-- /.col -->
+
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.github$" class="btn-share-sm">
+									<i class="icon-s-github"></i>
+								</a>
+							</div><!-- /.col -->
+							
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.linkedin$" class="btn-share-sm">
+									<i class="icon-s-linkedin"></i>
+								</a>
+							</div><!-- /.col -->
+							
+							<div class="col-sm-2 reset-padding">
+								<a href="$social.rss$" class="btn-share-sm">
+									<i class="icon-s-rss"></i>
+								</a>
+							</div><!-- /.col -->
+																
+						</div>
+						<p>Receive email updates about our projects.</p>
+
 						<form id="newsletter" class="form-inline newsletter" role="form" action="https://iilab.us4.list-manage.com/subscribe/post" method="POST">
 							<input type="hidden" name="u" value="c026c6b05afa24ee6d7fb3626">
 							<input type="hidden" name="id" value="a218f30db9">
@@ -51,16 +92,18 @@
 						    <input type="email" class="form-control" placeholder="Enter your email address" autocapitalize="off" autocorrect="off" name="MERGE0" id="MERGE0">
 							<button type="submit" class="btn btn-default btn-submit">Subscribe</button>
 						</form>
+
 					</div><!-- /.col -->
 				</div><!-- /.row --> 
 			</div><!-- .container -->
 
 			<div class="footer-bottom">
 				<div class="container inner">
-					<p class="pull-left">© 2014 $site.title$. All rights reserved.</p>
+					<p class="pull-left">© 2015 $site.title$. All rights reserved.</p>
 					<ul class="footer-menu pull-right">
 						<li><a href="/">Home</a></li>
 						<li><a href="/#about">About</a></li>
+						<li><a href="/privacy.html">Privacy</a></li>
 						<li><a href="/#work">Work</a></li>
 						<li><a href="/#team">Team</a></li>
 						<li><a href="/#blog">Blog</a></li>

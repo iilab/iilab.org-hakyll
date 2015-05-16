@@ -38,20 +38,28 @@ $partial("_templates/partials/header.html")$
 										<div class="post-content">
 											$if(images)$
 											<div class="owl-news owl-carousel owl-inner-pagination owl-inner-nav post-media">
+												
 												$for(images)$
 												<div class="item">
 													<figure>
-														<img src="/images/news/$src$" $if(caption)$alt="$caption$"$endif$>
+														<img src="/images/large/news/$src$" $if(caption)$alt="$caption$"$endif$>
 													</figure>
 												</div><!-- /.item -->
 												$endfor$
+												
 											</div><!-- /.owl-carousel -->
+											$else$
+											  $if(video)$
+ 	  											<div class="video-container post-media">
+													$video$
+													</div><!-- /.post-media -->
+											  $endif$
 											$endif$
 
 											$if(social)$
 											<ul class="meta">
                         <li class="categories">Social Media</li>
-												<li>$month$ $day$, $year$</li>
+												<li>$day$ $month$ $year$</li>
 												$if(tags)$<li class="categories">$tags$</li>$endif$
 												$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
 											</ul><!-- /.meta -->
@@ -73,13 +81,19 @@ $partial("_templates/partials/header.html")$
 											</blockquote>
 											$else$
 												<ul class="meta">
+													$if(authors)$
+														<li class="categories">$for(authors)$by $name$,$endfor$
+		                        $day$ $month$ $year$ 
+		                        </li>
+	                        $else$
+		                        <li class="categories">$day$ $month$ $year$ </li>
+	                        $endif$
 		                      $if(blog)$
 		                        <li class="categories">Blog</li>
 		                      $endif$
 		                      $if(tech)$
 		                        <li class="categories">Engineering</li>
 		                      $endif$
-													<li>$month$ $day$, $year$</li>
 													$if(tags)$<li class="categories">$tags$</li>$endif$
 													$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
 												</ul><!-- /.meta -->

@@ -16,9 +16,9 @@ Last year after a difficult experience with Jekyll for the Amnesty International
 
 That's when, in a familiar sequence of events, [well captured](http://chriswarbo.net/blog/2014-07-14-nixos.html) as
 
-1. Try to do something simple 
-2. Fail 
-3. Go down a rabbit hole in an attempt to fix it
+ - Try to do something simple 
+ - Fail 
+ - Go down a rabbit hole in an attempt to fix it
 
 I recursed through a few rabbit holes after my metalsmith/npm woes by trying Hakyll, running into cabal hell, decided to try Nix, saw that it was a bit bleeding edge for OSX, managed to go through that more or less, until I bumped into a compilation problem with the haskellPackages and was helped by the nice folks on the ##nix-darwin IRC channel and pointed to the even more bleeding edge HaskellNG Nix approach which of course, is how deep the rabbit hole goes. 
 

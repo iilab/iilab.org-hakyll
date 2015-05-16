@@ -91,7 +91,7 @@ $partial("_templates/partials/header.html")$
 												$for(images)$
 												<div class="item">
 													<figure>
-														<img src="/images/news/$src$" alt="">
+														<img src="/images/small/news/$src$" alt="">
 													</figure>
 												</div><!-- /.item -->
 												$endfor$
@@ -103,7 +103,7 @@ $partial("_templates/partials/header.html")$
 										  $if(social)$
 												<ul class="meta">
 	                        <li class="categories">Social Media</li>
-													<li class="date">$month$ $day$, $year$</li>
+													<li class="date">$day$ $month$ $year$</li>
 														$if(tags)$<li class="categories">$tags$</li>$endif$
 														$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
 												</ul><!-- /.meta -->
@@ -128,13 +128,19 @@ $partial("_templates/partials/header.html")$
 													</h2>
 												$endif$
 												<ul class="meta">
+													$if(authors)$
+														<li class="categories">$for(authors)$by $name$,$endfor$
+		                        $day$ $month$ $year$ 
+		                        </li>
+	                        $else$
+		                        <li class="categories">$day$ $month$ $year$ </li>
+	                        $endif$
 		                      $if(blog)$
 		                        <li class="categories">Blog</li>
 		                      $endif$
 		                      $if(tech)$
 		                        <li class="categories">Engineering</li>
 		                      $endif$
-													<li class="date">$month$ $day$, $year$</li>
 													$if(tags)$<li class="categories">$tags$</li>$endif$
 													$if(url)$<li class="link"><a href="$url$">$shorturl$</a></li>$endif$
 												</ul><!-- /.meta -->
