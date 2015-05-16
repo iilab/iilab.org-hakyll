@@ -1,14 +1,14 @@
 --------------------------------------------------------------------------------
 {-# LANGUAGE OverloadedStrings #-}
-import           Control.Applicative (empty, (<$>), liftA, liftA2)
-import           Control.Monad (join)
-import           Data.Maybe          (maybe, catMaybes, maybeToList, isJust)
+import           Control.Applicative (pure, empty, (<$>), liftA, liftA2)
+import           Control.Monad (join, forM, liftM, liftM2, filterM)
+import           Data.Maybe          (maybe, catMaybes, maybeToList, isJust, fromJust, fromMaybe)
 import           Data.Monoid         (Monoid, mempty, mconcat, (<>))
 import           Data.List (find, isPrefixOf)
 import           Data.List.Split (splitOn)
 import qualified Data.Map.Strict as Map
 import           Data.String (fromString)  
-import           Hakyll
+import           Hakyll hiding (listField)
 import qualified Data.ByteString.Lazy.Char8 as LB
 import qualified Data.Text as T   (pack, unpack, breakOn)
 import qualified Data.Text.Encoding as E
@@ -84,8 +84,7 @@ main = hakyll $ do
     match "_posts/news/*" $ do
         route $ setExtension "html" `composeRoutes` (gsubRoute "_posts/" (const "")) 
         compile $ do
-            projects <- recentFirst =<<
-                loadAllSnapshots "_posts/projects/*" "project-content"
+            projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let blogCtx =
                     listField "projects" projectCtx (return projects) <>
                     postCtx <>
@@ -99,21 +98,41 @@ main = hakyll $ do
                 >>= loadAndApplyTemplate "_templates/default.html" blogCtx
                 >>= relativizeUrls
 
+    match "_posts/news/*" $ version "raw" $ do
+        route   idRoute
+        compile getResourceBody
+
     match "_posts/projects/*" $ do
         route $ setExtension "html" `composeRoutes` (gsubRoute "_posts/" (const ""))
-        compile $ pandocCompiler
-            >>= saveSnapshot "project-content"
-            >>= loadAndApplyTemplate "_templates/project.html"    projectCtx
-            >>= loadAndApplyTemplate "_templates/default.html" projectCtx
-            >>= relativizeUrls
+        compile $ do
+            id' <- getUnderlying
+            metadata <- getMetadata id'
+            projId <- return $ fromJust $ Map.lookup "slug" metadata
+            projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
+            posts <- projectPost projId =<< recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+--            posts <- projectPost projId =<< recentFirst =<< loadAll ( "_posts/news/*" .&&. hasVersion "raw")
+            let projCtx =
+                    listField "projects" projectCtx (return projects) <>
+                    listField "posts" postCtx (return posts) <>
+                    projectCtx <>
+                    siteCtx <>
+                    defaultContext
+
+            pandocCompiler
+                >>= saveSnapshot "project-content"
+                >>= loadAndApplyTemplate "_templates/project.html" projCtx
+                >>= loadAndApplyTemplate "_templates/default.html" projCtx
+                >>= relativizeUrls
+
+    match "_posts/projects/*" $ version "raw" $ do
+        route   idRoute
+        compile getResourceBody
 
     create ["index.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<<
-                loadAllSnapshots "_posts/news/*" "blog-content"
-            projects <- recentFirst =<<
-                loadAllSnapshots "_posts/projects/*" "project-content"
+            posts <- recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+            projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let indexCtx =
                     listField "posts" postCtx (return posts) <>
                     listField "projects" projectCtx (return projects) <>
@@ -130,10 +149,8 @@ main = hakyll $ do
     create ["news.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<<
-                loadAllSnapshots "_posts/blog/*" "blog-content"
-            projects <- fmap (take 10) . recentFirst =<<
-                loadAllSnapshots "_posts/projects/*" "project-content"
+            posts <- recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+            projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let ctx =
                     listField "posts" postCtx (return posts) <>
                     listField "projects" projectCtx (return projects) <>
@@ -182,6 +199,56 @@ postCtx =
     postImagesCtx <>
     siteCtx <>
     defaultContext
+
+--------------------------------------------------------------------------------
+-- | A context with "teaser" key which contain a teaser of the item.
+-- The item is loaded from the given snapshot (which should be saved
+-- in the user code before any templates are applied).
+lessField :: String           -- ^ Key to use
+            -> Snapshot         -- ^ Snapshot to load
+            -> Context String   -- ^ Resulting context
+lessField key snapshot = field key $ \item -> do
+    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
+    case needlePrefix "<!--more-->" body of
+        Nothing -> return body
+        Just t -> return t
+
+--------------------------------------------------------------------------------
+-- | A context with "teaser" key which contain a teaser of the item.
+-- The item is loaded from the given snapshot (which should be saved
+-- in the user code before any templates are applied).
+moreField :: String           -- ^ Key to use
+            -> Snapshot         -- ^ Snapshot to load
+            -> Context String   -- ^ Resulting context
+moreField key snapshot = field key $ \item -> do
+    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
+    case needleSuffix "<!--more-->" body of
+        Nothing -> return ""
+        Just t -> return t
+
+
+--------------------------------------------------------------------------------
+projectPost' :: Compiler Identifier -> [Item String] -> Compiler [Item String]
+projectPost' proj items = do
+    mapM makeItem [] 
+
+--------------------------------------------------------------------------------
+projectPost :: String -> [Item String] -> Compiler [Item String]
+projectPost proj items = do
+  -- itemsWithTime is a list of couple (date,item)
+  projectPosts <- flip filterM items $ \item -> do
+    -- curProj <- getMetadataField' projId "title"
+    -- getItemUTC will look for the metadata "published" or "date"
+    -- then it will try to get the date from some standard formats
+    postProjMetadata <- getMetadata (setVersion (Just "raw") (itemIdentifier item) )
+    let project = Map.lookup "projects" postProjMetadata 
+    -- project <- getMetadataField (itemIdentifier item) "project"
+    debugCompiler $ "projectPost - " <> proj <> " " <> show project
+    case project of
+        Just postProj -> if (proj == postProj) then return True else return False
+        Nothing -> return False
+  -- we return a sorted item list
+  return projectPosts
 
 --------------------------------------------------------------------------------
 
@@ -255,6 +322,43 @@ iconCtx = field "icon-format" $ \item -> do
         Just "format" -> return "wat?"
         Nothing -> return "edit"
 
+
+--------------------------------------------------------------------------------
+projectLinksCtx :: Context String
+projectLinksCtx = listFieldWith' "project-links" (projectLinkCtx) getLinks
+
+getLinks :: Item String -> Compiler [Item (String,String)]
+getLinks item = do
+        maybelinks <- getMetadataField (itemIdentifier item) "links"
+        maybetitles <- getMetadataField (itemIdentifier item) "links-title"
+        links <- return $ map trim $ maybe [] (splitOn ",") maybelinks 
+        titles <- return $ map trim $ maybe [] (splitOn "|") maybetitles
+        projectlinks <- return $ zipPad links titles
+        mapM makeItem projectlinks
+
+projectLinkCtx :: Context (String, String)
+projectLinkCtx = mconcat [ field "link" $ return . fst . itemBody 
+                         , field "title" $ return . snd . itemBody 
+                         ]
+
+--------------------------------------------------------------------------------
+projectPartnersCtx :: Context String
+projectPartnersCtx = listFieldWith' "project-partners" (projectPartnerCtx) getPartners
+
+getPartners :: Item String -> Compiler [Item (String,String)]
+getPartners item = do
+        maybepartners <- getMetadataField (itemIdentifier item) "partners"
+        maybelinks <- getMetadataField (itemIdentifier item) "partners-link"
+        partners <- return $ map trim $ maybe [] (splitOn ",") maybepartners 
+        links <- return $ map trim $ maybe [] (splitOn "|") maybelinks
+        projectpartner <- return $ zipPad partners links
+        mapM makeItem projectpartner
+
+projectPartnerCtx :: Context (String, String)
+projectPartnerCtx = mconcat [ field "partner" $ return . fst . itemBody 
+                            , field "link" $ return . snd . itemBody 
+                            ]
+
 --------------------------------------------------------------------------------
 postImagesCtx :: Context String
 postImagesCtx = listFieldWith "images" (imageCtx) getImages
@@ -278,6 +382,9 @@ projectCtx :: Context String
 projectCtx =
     dateField "date" "%B %e, %Y" <>
     teaserField "teaser" "project-content" <>
+    projectPartnersCtx <>
+    projectLinksCtx <>
+    postImagesCtx <>
     siteCtx <>
     defaultContext
 
@@ -510,31 +617,6 @@ staff = [ Staff { key = "jun"
         ]
 
 
---------------------------------------------------------------------------------
--- | A context with "teaser" key which contain a teaser of the item.
--- The item is loaded from the given snapshot (which should be saved
--- in the user code before any templates are applied).
-lessField :: String           -- ^ Key to use
-            -> Snapshot         -- ^ Snapshot to load
-            -> Context String   -- ^ Resulting context
-lessField key snapshot = field key $ \item -> do
-    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
-    case needlePrefix "<!--more-->" body of
-        Nothing -> return body
-        Just t -> return t
-
---------------------------------------------------------------------------------
--- | A context with "teaser" key which contain a teaser of the item.
--- The item is loaded from the given snapshot (which should be saved
--- in the user code before any templates are applied).
-moreField :: String           -- ^ Key to use
-            -> Snapshot         -- ^ Snapshot to load
-            -> Context String   -- ^ Resulting context
-moreField key snapshot = field key $ \item -> do
-    body <- itemBody <$> loadSnapshot (itemIdentifier item) snapshot
-    case needleSuffix "<!--more-->" body of
-        Nothing -> return ""
-        Just t -> return t
 
 --------------------------------------------------------------------------------
 -- | Find the first instance of needle (must be non-empty) in haystack. We
@@ -562,3 +644,28 @@ zipPad :: (Monoid a, Monoid b) => [a] -> [b] -> [(a, b)]
 zipPad xs [] = zip xs (repeat mempty)
 zipPad [] ys = zip (repeat mempty) ys
 zipPad (x:xs) (y:ys) = (x, y) : zipPad xs ys
+
+--------------------------------------------------------------------------------
+listField :: String -> Context a -> Compiler [Item a] -> Context b
+listField key c xs = listFieldWith' key c (const xs)
+
+--------------------------------------------------------------------------------
+
+listFieldWith' :: String -> Context a -> (Item b -> Compiler [Item a]) -> Context b
+listFieldWith' key c f = field' key $ fmap (ListField c) . f
+--listFieldWith' key c _ = Context $  \k _ i -> empty
+--listFieldWith' key c f = field' key $ fmap (ListField c) . (\i -> do 
+--    debugCompiler $ "listFieldWith - " <> proj <> " " <> show project
+--    emptyList <- fmap null $ f i
+--    if emptyList then return empty else f i )
+
+--------------------------------------------------------------------------------
+field' :: String -> (Item a -> Compiler ContextField) -> Context a
+field' key value = Context $ \k _ i -> if k == key 
+    then do
+        v <- value i
+        case v of 
+            ListField _ xs -> if (null xs) then empty else return v
+            _ -> return v
+    else empty
+
