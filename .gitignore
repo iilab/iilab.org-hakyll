@@ -1,3 +1,4 @@
 dist
 site
+_site*
 _cache*
