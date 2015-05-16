@@ -1,27 +1,52 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings #-}
+{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
 import           Control.Applicative (pure, empty, (<$>), liftA, liftA2)
 import           Control.Monad (join, forM, liftM, liftM2, filterM)
 import           Data.Maybe          (maybe, catMaybes, maybeToList, isJust, fromJust, fromMaybe)
 import           Data.Monoid         (Monoid, mempty, mconcat, (<>))
+import           Data.Functor        ((<$))
 import           Data.List (find, isPrefixOf)
 import           Data.List.Split (splitOn)
 import qualified Data.Map.Strict as Map
 import           Data.String (fromString)  
 import           Hakyll hiding (listField)
 import qualified Data.ByteString.Lazy.Char8 as LB
-import qualified Data.Text as T   (pack, unpack, breakOn)
+import qualified Data.Text as T   (pack, unpack, breakOn, drop)
 import qualified Data.Text.Encoding as E
 import           Text.Jasmine
 import           Debug.Hood.Observe
 import           System.FilePath     (replaceExtension, takeDirectory, (</>))
 
+import Control.Arrow ((>>^))
+import System.Cmd (rawSystem, system)
+import Data.Typeable (Typeable)
+import Data.Binary (Binary)
 --------------------------------------------------------------------------------
 main :: IO ()
 main = hakyll $ do
+    match "_assets/*" $ do
+        route (gsubRoute "_assets/" (const ""))
+        compile copyFileCompiler
+
     match "_assets/images/**" $ do
         route (gsubRoute "_assets/" (const ""))
         compile copyFileCompiler
+
+    match "_assets/images/**" . version "large" $ do
+        route (gsubRoute "_assets/images" (const "images/large"))
+        compile $ imageResizeCompiler 1078 606
+
+    match "_assets/images/**" . version "medium" $ do
+        route (gsubRoute "_assets/images" (const "images/medium"))
+        compile $ imageResizeCompiler 748 499
+
+    match "_assets/images/**" . version "small" $ do
+        route (gsubRoute "_assets/images" (const "images/small"))
+        compile $ imageResizeCompiler 384 288
+
+    match "_assets/images/**" . version "tiny" $ do
+        route (gsubRoute "_assets/images" (const "images/tiny"))
+        compile $ imageResizeCompiler 125 77
 
     match "_assets/fonts/fontello/*" $ do
         route (gsubRoute "_assets/" (const ""))
@@ -36,13 +61,13 @@ main = hakyll $ do
         compile $ do 
             bootstrap <- load "_assets/css/bootstrap.min.css"
             main <- load "_assets/css/main.css"
-            iilab <- load "_assets/css/iilab.css"
             gray <- load "_assets/css/gray.css"
             carousel <- load "_assets/css/owl.carousel.css"
             transitions <- load "_assets/css/owl.transitions.css"
             animate <- load "_assets/css/animate.min.css"
             font <- load "_assets/fonts/fontello.css"
-            makeItem $ unlines (map itemBody (bootstrap:main:iilab:gray:carousel:transitions:animate:font:[] :: [Item String]))
+            iilab <- load "_assets/css/iilab.css"
+            makeItem $ unlines (map itemBody (bootstrap:main:gray:carousel:transitions:animate:font:iilab:[] :: [Item String]))
 
 --  Copy IE HTML5 shims
     match ("_assets/js/ie/*" .||. "_assets/js/*.map" .||. "_assets/js/onscroll.js") $ do
@@ -67,13 +92,15 @@ main = hakyll $ do
             validate <- load "_assets/js/jquery.validate.min.js"
             respond <- load "_assets/js/respond.min.js"
             isotope <- load "_assets/js/jquery.isotope.min.js"
-            infinite <- load "_assets/js/jquery.infinitescroll.min.js"
+--            infinite <- load "_assets/js/jquery.infinitescroll.min.js"
             easytabs <- load "_assets/js/jquery.easytabs.min.js"
             viewport <- load "_assets/js/viewport-units-buggyfill.js"            
+            picturefill <- load "_assets/js/picturefill.min.js"
             scripts <- load "_assets/js/theme_scripts.js"
             iilab <- load "_assets/js/iilab.js"
 --            concatItems (core:items) >>= withItemBody compressJsCompiler
-            makeItem $ unlines (map itemBody (((jquery:easing:bootstrap:hover:skrollr:skrollrstyle:waypoints:waypointssticky:carousel:form:validate:respond:isotope:infinite:easytabs:viewport:scripts:iilab:[])) :: [Item String]))
+            concatItems (jquery:easing:bootstrap:hover:skrollr:skrollrstyle:waypoints:waypointssticky:carousel:form:validate:respond:isotope:easytabs:viewport:picturefill:scripts:iilab:[])
+                 >>= jsCompiler
 
 {--    match (fromList ["about.rst", "contact.markdown"]) $ do
         route   $ setExtension "html"
@@ -81,6 +108,22 @@ main = hakyll $ do
             >>= loadAndApplyTemplate "_templates/default.html" defaultContext
             >>= relativizeUrls
 --}
+
+    match "_pages/**" $ do
+        route $ setExtension "html" `composeRoutes` (gsubRoute "_pages/" (const "")) 
+        compile $ do
+            projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
+            let blogCtx =
+                    listField "projects" projectCtx (return projects) <>
+                    postCtx <>
+                    siteCtx <>
+                    defaultContext
+
+            pandocCompiler
+                >>= loadAndApplyTemplate "_templates/pages.html" blogCtx
+                >>= loadAndApplyTemplate "_templates/default.html" blogCtx
+                >>= relativizeUrls
+
     match "_posts/news/*" $ do
         route $ setExtension "html" `composeRoutes` (gsubRoute "_posts/" (const "")) 
         compile $ do
@@ -131,7 +174,7 @@ main = hakyll $ do
     create ["index.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+            posts <- fmap (take 9) . recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
             projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let indexCtx =
                     listField "posts" postCtx (return posts) <>
@@ -167,19 +210,18 @@ main = hakyll $ do
     create ["rss.xml"] $ do
         route idRoute
         compile $ do
-            loadAllSnapshots "_posts/*" "content"
+            loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
                 >>= fmap (take 10) . recentFirst
                 >>= renderRss (feedConfiguration "All posts") feedCtx
 
     match "_templates/**" $ compile templateCompiler
 
-    where
-      
-        compressJsCompiler :: Compiler (Item String)
-        compressJsCompiler = fmap jasmin <$> getResourceString
-        
-        jasmin :: String -> String
-        jasmin src = LB.unpack $ minify $ LB.fromChunks [(E.encodeUtf8 $ T.pack src)] 
+
+jsCompiler   :: Item String -> Compiler (Item String)
+jsCompiler   = withItemBody (unixFilter "jsmin" [])
+
+concatItems :: [Item String] -> Compiler (Item String)
+concatItems xs = makeItem $ concatMap itemBody xs
 
 --------------------------------------------------------------------------------
 postCtx :: Context String
@@ -361,7 +403,7 @@ projectPartnerCtx = mconcat [ field "partner" $ return . fst . itemBody
 
 --------------------------------------------------------------------------------
 postImagesCtx :: Context String
-postImagesCtx = listFieldWith "images" (imageCtx) getImages
+postImagesCtx = listFieldWith' "images" (imageCtx) getImages
 
 getImages :: Item String -> Compiler [Item (String,String)]
 getImages item = do
@@ -394,6 +436,18 @@ feedCtx = mconcat
     [ bodyField "description"
     , defaultContext
     ]
+
+--------------------------------------------------------------------------------
+
+newtype Images = Images (Int,Int,FilePath)
+                 deriving (Show, Eq, Ord, Binary, Typeable)
+
+instance Writable Images where
+    write dst (Item _ (Images (w,h,src))) = let r = "convert -strip -resize " ++ show w ++ "x" ++ show h ++ " \"" ++ src ++ "\" \"" ++  dst ++ "\""
+        in system r  >> return ()
+imageResizeCompiler :: Int -> Int -> Compiler (Item Images)
+imageResizeCompiler w h = getUnderlying >>= \y -> return (Item y $ Images (w,h,toFilePath y))
+
 
 --------------------------------------------------------------------------------
 feedConfiguration :: String -> FeedConfiguration
@@ -432,6 +486,7 @@ siteCtx = mconcat
     , constField "social.github" "https://github.com/iilab"
     , constField "social.facebook" "http://www.facebook.com/iilab.org"
     , constField "social.twitter" "http://twitter.com/iilab"
+    , constField "social.rss" "/rss.xml"
     , constField "social.envelope" "mailto:contact@iilab.org"
     , listField "programs" 
                 ( mconcat [ field "key" $ return . fst . itemBody
@@ -500,7 +555,7 @@ siteCtx = mconcat
 -- The key was to use listFieldWith !!!
 --
                           , listFieldWith "affiliations" ( mconcat [ field "key" $ return . T.unpack . fst . (T.breakOn $ T.pack "|") <$> T.pack . itemBody
-                                                               , field "site" $ return . T.unpack . snd . (T.breakOn $ T.pack "|") <$> T.pack . itemBody ] ) 
+                                                               , field "site" $ return . T.unpack . ( T.drop 1 ) . snd . (T.breakOn $ T.pack "|") <$> T.pack . itemBody ] ) 
                                                          ( mapM makeItem . (splitOn ",") . Map.findWithDefault "" "affiliations" . itemBody ) 
                           , field "twitter" $ return . Map.findWithDefault "" "twitter" . itemBody
                           , field "linkedin" $ return . Map.findWithDefault "" "linkedin" . itemBody

@@ -1,5 +1,9 @@
 # iilab Hakyll website
 
+Requirements:
+ * ImageMagick 
+ * JSMin
+
 ## Setup the environment
 
 export NIX_PATH 
@@ -18,3 +22,19 @@ nix-shell -I ~ --command 'cabal build'
 ```
 
 or use ```./rebuild.sh```
+
+## To rebuild after adding or removing dependencies to the generator
+
+ * edit the cabal file
+ * regenerate the shell.nix file
+
+```
+$ cabal2nix --shell . > shell.nix
+```
+
+ * ```./rebuild.sh```
+
+## TODO
+
+ * Refactor like https://github.com/vbeffara/web-hakyll/blob/master/site.hs
+ * 
