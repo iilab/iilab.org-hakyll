@@ -1,7 +1,7 @@
 with (import <nixpkgs> {}).pkgs;
 let pkg = haskellngPackages.callPackage
-            ({ mkDerivation, base, bytestring, containers, filepath, hakyll
-             , hjsmin, hood, split, stdenv, text
+            ({ mkDerivation, base, binary, bytestring, containers, filepath
+             , hakyll, hjsmin, hood, process, split, stdenv, text
              }:
              mkDerivation {
                pname = "iilab-org-hakyll";
@@ -10,7 +10,8 @@ let pkg = haskellngPackages.callPackage
                isLibrary = false;
                isExecutable = true;
                buildDepends = [
-                 base bytestring containers filepath hakyll hjsmin hood split text
+                 base binary bytestring containers filepath hakyll hjsmin hood
+                 process split text
                ];
                license = "LGPL";
              }) {};
