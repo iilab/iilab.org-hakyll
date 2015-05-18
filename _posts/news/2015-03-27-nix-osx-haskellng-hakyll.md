@@ -4,6 +4,7 @@ slug: 2015-03-27-nix-osx-haskellng-hakyll
 format: tech
 tags: functional programming, static site generator, haskell, hakyll, nix 
 author: jun
+published: false
 ---
 
 I've recently started to look into learning Haskell and have been in the books for a few months, so didn't yet have to experience the practical side of what comes with the workflow of working with Haskell. 

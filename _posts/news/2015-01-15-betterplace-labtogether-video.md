@@ -1,7 +1,7 @@
 ---
 title: Panic Button @ Labtogether
-slug: 2014-11-26-betterplace-labtogether-video
-date: 2014-11-26
+slug: 2015-01-15-betterplace-labtogether-video
+date: 2015-01-15
 collection: news
 format: link
 template: blog.html
