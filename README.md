@@ -36,5 +36,7 @@ $ cabal2nix --shell . > shell.nix
 
 ## TODO
 
+ * Implement pagination
+ * Add about / strategy / methodology sections.
  * Refactor like https://github.com/vbeffara/web-hakyll/blob/master/site.hs
  * 

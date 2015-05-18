@@ -18,7 +18,7 @@ import           Debug.Hood.Observe
 import           System.FilePath     (replaceExtension, takeDirectory, (</>))
 
 import Control.Arrow ((>>^))
-import System.Cmd (rawSystem, system)
+import System.Process (rawSystem, system)
 import Data.Typeable (Typeable)
 import Data.Binary (Binary)
 --------------------------------------------------------------------------------
@@ -213,7 +213,7 @@ main = hakyll $ do
             loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
                 >>= fmap (take 10) . recentFirst
                 >>= filterM isPublished 
-                >>= renderRss (feedConfiguration "All posts") feedCtx
+                >>= renderRss feedConfiguration feedCtx
 
     match "_templates/**" $ compile templateCompiler
 
@@ -460,10 +460,10 @@ imageResizeCompiler w h = getUnderlying >>= \y -> return (Item y $ Images (w,h,t
 
 
 --------------------------------------------------------------------------------
-feedConfiguration :: String -> FeedConfiguration
-feedConfiguration title = FeedConfiguration
-    { feedTitle       = "iilab - " ++ title
-    , feedDescription = "iilab - news feed"
+feedConfiguration :: FeedConfiguration
+feedConfiguration = FeedConfiguration
+    { feedTitle       = "iilab - Innovative Technology For Social Impact"
+    , feedDescription = "iilab harnesses information innovation to help your social good initiatives improve their human impact."
     , feedAuthorName  = "iilab"
     , feedAuthorEmail = "contact@iilab.org"
     , feedRoot        = "https://iilab.org"
