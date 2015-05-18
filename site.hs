@@ -1,5 +1,5 @@
 --------------------------------------------------------------------------------
-{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, DeriveDataTypeable #-}
+{-# LANGUAGE OverloadedStrings, GeneralizedNewtypeDeriving, DeriveDataTypeable, ViewPatterns #-}
 import           Control.Applicative (pure, empty, (<$>), liftA, liftA2)
 import           Control.Monad (join, forM, liftM, liftM2, filterM)
 import           Data.Maybe          (maybe, catMaybes, maybeToList, isJust, fromJust, fromMaybe)
@@ -174,7 +174,7 @@ main = hakyll $ do
     create ["index.html"] $ do
         route idRoute
         compile $ do
-            posts <- fmap (take 9) . recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+            posts <- fmap (take 9) . filterM isPublished =<< recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
             projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let indexCtx =
                     listField "posts" postCtx (return posts) <>
@@ -192,7 +192,7 @@ main = hakyll $ do
     create ["news.html"] $ do
         route idRoute
         compile $ do
-            posts <- recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
+            posts <- filterM isPublished =<< recentFirst =<< loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
             projects <- recentFirst =<< loadAll ("_posts/projects/*" .&&. hasVersion "raw")
             let ctx =
                     listField "posts" postCtx (return posts) <>
@@ -212,6 +212,7 @@ main = hakyll $ do
         compile $ do
             loadAllSnapshots ( "_posts/news/*" .&&. hasNoVersion ) "blog-content"
                 >>= fmap (take 10) . recentFirst
+                >>= filterM isPublished 
                 >>= renderRss (feedConfiguration "All posts") feedCtx
 
     match "_templates/**" $ compile templateCompiler
@@ -241,6 +242,15 @@ postCtx =
     postImagesCtx <>
     siteCtx <>
     defaultContext
+
+--------------------------------------------------------------------------------
+isPublished :: MonadMetadata m => Item a -> m Bool
+isPublished (itemIdentifier -> ident) =
+    do publishedM <- getMetadataField ident "published"
+       case publishedM of
+           Nothing      -> return True
+           Just "false" -> return False
+           Just s       -> fail ("invalid `published' metadata value: " ++ s)
 
 --------------------------------------------------------------------------------
 -- | A context with "teaser" key which contain a teaser of the item.
@@ -453,7 +463,7 @@ imageResizeCompiler w h = getUnderlying >>= \y -> return (Item y $ Images (w,h,t
 feedConfiguration :: String -> FeedConfiguration
 feedConfiguration title = FeedConfiguration
     { feedTitle       = "iilab - " ++ title
-    , feedDescription = "iilab - blog feed"
+    , feedDescription = "iilab - news feed"
     , feedAuthorName  = "iilab"
     , feedAuthorEmail = "contact@iilab.org"
     , feedRoot        = "https://iilab.org"
