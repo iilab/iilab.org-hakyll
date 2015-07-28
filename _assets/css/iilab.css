@@ -1,6 +1,18 @@
 body {
     color: #878787;
     background-color: #FFF;
+    font-size: 22px;
+    line-height: 165%;
+}
+
+body #blog {
+    color: #878787;
+    font-size: 18px;
+    line-height: 150%;
+}
+
+body #blog-post {
+    font-family: "freight-text-pro",Georgia,Cambria,"Times New Roman",Times,serif;
 }
 
 h1,
@@ -10,6 +22,67 @@ h4,
 h5,
 h6 {
     color: #656565;
+}
+
+#blog-post h2 {
+  margin-top: 60px;
+  font-size: 34px;
+}
+
+#blog-post h3 {
+  margin-top: 40px;
+  font-size: 26px;
+}
+
+@media (max-width: 767px) {
+  body #blog-post li {
+    font-size: 16px;
+    line-height: 150%;
+    margin-bottom: 5px;
+  }
+
+  code {
+    font-size:80%;
+    color: #333;
+  }
+  pre {
+    overflow-x: auto;
+  }
+  pre code {
+    overflow-wrap: normal;
+    white-space: pre;
+    margin-top:22px;
+    margin-bottom:32px;
+    font-size: 12px;
+  }
+}
+
+code {
+  font-size:80%;
+  color: #333;
+}
+pre {
+  overflow-x: auto;
+}
+pre {
+  margin-top:22px;
+  margin-bottom:32px;
+  font-size: 16px;
+  overflow-wrap: normal;
+  white-space: pre;
+}
+
+#blog-post h2::before {
+  content: "";
+  display: block;
+  width: 8%;
+  margin: 0px 46% 0px 46%;
+  border-top: #BBB 1px solid;
+  margin-bottom: 80px;
+}
+
+p a {
+  border-bottom: 1px solid #BBB;
 }
 
 .owl-carousel {
