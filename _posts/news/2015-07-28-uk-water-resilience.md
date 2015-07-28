@@ -26,9 +26,9 @@ To understand how to fulfil this duty, the UK water regulator, [Ofwat](http://of
 
 I am thrilled and humbled to be helping provide recommendations that may shape the UK's approach to water resilience. With the group, I am working on two areas: a broad look at what water resilience looks like from a multitude of perspectives, which Jun and I are now turning into a map of water resilience with the aim of producing a systems map that can be used by policy makers and stakeholders alike to understand leverage points in which they could have agency to bring about a more resilient approach to water; and a body of research on community based water resilience strategies. 
 
-## Starting with a clear definition of Resilience
+## Working towards a clear definition of Resilience
 
-Our work has already had an impact in shaping [Ofwat's definition of resilience in their resilience consultation,](http://www.ofwat.gov.uk/regulating/tools/pap_con20150708resilence.pdf?download=Download) which is taking place alongside our independent work. 
+Defining resilience is almost a specialisation in itself, and no definition will please all the people all the time. But part of the workgroup's aim is to come up with a workable definition that focusses on water resilience in the UK. Our work has already had an impact in shaping [Ofwat's definition of resilience in their resilience consultation,](http://www.ofwat.gov.uk/regulating/tools/pap_con20150708resilence.pdf?download=Download) which is taking place alongside our independent work. 
 
 The definition so far is:
 
@@ -44,7 +44,7 @@ Another interesting difference was how each of us perceived the "final point" at
 
 Here comes the fun bit, though. The approach of the working group is participative. At iilab, we will be sharing both the water map and the research when it's in a more complete state. To help inform both the mapping, the research, and the recommendations for Ofwat, the group has generated a survey for interested parties who might have knowledge or ideas to share with respect to working towards water resilience. 
 
-## How to contribute?
+## How to contribute
 
 What do you think about water resilience? I'd like to share the survey with you - here's the agreed wording for doing that:
 
