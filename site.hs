@@ -524,6 +524,7 @@ siteCtx = mconcat
     , listField "staff"
                 ( mconcat [ field "key" $ return . key . itemBody 
                           , boolField "offset" $ offset . itemBody
+                          , boolField "clearfix" $ clearfix . itemBody
                           , field "name" $ return .name . itemBody 
                           , field "title" $ return .title . itemBody 
                           , field "description" $ return . description . itemBody
@@ -533,10 +534,11 @@ siteCtx = mconcat
                           , field "site" $ return . site . itemBody ] )
                 ( mapM makeItem staff )
     , listField "contributors"
-                ( mconcat [ field "key" $ return . Map.findWithDefault "" "key" . itemBody 
-                          , field "name" $ return . Map.findWithDefault "" "name" . itemBody 
-                          , field "description" $ return . Map.findWithDefault "" "description" . itemBody
-                          , field "projects" $ return . Map.findWithDefault "" "projects" . itemBody
+                ( mconcat [ field "key" $ return . contributor_key . itemBody 
+                          , boolField "offset" $ contributor_offset . itemBody
+                          , field "name" $ return . contributor_name . itemBody 
+                          , field "description" $ return . contributor_description . itemBody
+                          , field "projects" $ return . contributor_projects . itemBody
 -- 
 -- It's unclear how I can nest listFields 
 -- listField :: String -> Context a -> Compiler [Item a] -> Context b
@@ -566,21 +568,14 @@ siteCtx = mconcat
 --
                           , listFieldWith "affiliations" ( mconcat [ field "key" $ return . T.unpack . fst . (T.breakOn $ T.pack "|") <$> T.pack . itemBody
                                                                , field "site" $ return . T.unpack . ( T.drop 1 ) . snd . (T.breakOn $ T.pack "|") <$> T.pack . itemBody ] ) 
-                                                         ( mapM makeItem . (splitOn ",") . Map.findWithDefault "" "affiliations" . itemBody ) 
-                          , field "twitter" $ return . Map.findWithDefault "" "twitter" . itemBody
-                          , field "linkedin" $ return . Map.findWithDefault "" "linkedin" . itemBody
-                          , field "github" $ return . Map.findWithDefault "" "github" . itemBody
-                          , field "site" $ return . Map.findWithDefault "" "site" . itemBody ] )
-                ( sequence [ makeItem ( Map.fromList [ ( "key", "alex")
-                                                     , ( "name", "Alex Shure")
-                                                     , ( "projects", "open-droplet")
-                                                     , ( "affiliations", "Open Source Ecology Germany|http://opensourceecology.de/,Open it agency|http://openitagency.eu/")
-                                                     , ( "description", "Alex Shure is a skilled craftsman and inventor active in the field of open source hardware within many different projects. As a human-nerd-interactor he pushes open source beyond the world of software - to infinity and beyond, starting with Open Source Ecology Germany and the Open it Agency.")
-                                                     , ( "twitter", "https://twitter.com/AlexShure")
-                                                     , ( "linkedin", "http://www.linkedin.com/in/jmatsushita" )
-                                                     , ( "github", "https://github.com/aShure" )
-                                                     , ( "site", "http://etemu.com/") ] )
-                           , makeItem ( Map.fromList [ ( "key", "elf")
+                                                         ( mapM makeItem . (splitOn ",") . contributor_affiliations . itemBody ) 
+                          , field "twitter" $ return . contributor_twitter . itemBody
+--                          , field "linkedin" $ return . contributor_linkedin . itemBody
+                          , field "github" $ return . contributor_github . itemBody
+                          , field "site" $ return . contributor_site . itemBody ] )
+                ( mapM makeItem contributors )
+{--                ( sequence [ makeItem ( Map.fromList [ ( "key", "elf")
+                                                     , ( "offset", True)
                                                      , ( "name", "elf Pavlik")
                                                      , ( "projects", "open-oil-framework")
                                                      , ( "affiliations", "Hackers4peace|http://hackers4peace.net/,PolyEconomy|http://polyeconomy.info/" )
@@ -590,6 +585,7 @@ siteCtx = mconcat
                                                      , ( "github", "https://github.com/elf-pavlik" )
                                                      , ( "site", "https://wwelves.org/perpetual-tripper/") ] )
                            , makeItem ( Map.fromList [ ( "key", "sam")
+                                                     , ( "offset", False)
                                                      , ( "name", "Sam Muirhead")
                                                      , ( "projects", "open-droplet")
                                                      , ( "affiliations", "Year Of Open Source|http://yearofopensource.net,Open it agency|http://openitagency.eu/")
@@ -598,7 +594,7 @@ siteCtx = mconcat
                                                      , ( "linkedin", "http://de.linkedin.com/pub/kat-austen/4/579/216" )
                                                      , ( "github", "https://github.com/samoos" )
                                                      , ( "site", "http://cameralibre.cc/") ] )
-                           ])
+                           ]) --}
     , listField "partners"
                 ( mconcat [ field "key" $ return . partner_key . itemBody 
                           , field "name" $ return . partner_name . itemBody 
@@ -651,6 +647,7 @@ partners = [ Partner { partner_key = "atchai"
 data Staff = Staff { key :: String
                    , name :: String
                    , offset :: Bool
+                   , clearfix :: Bool
                    , title :: String
                    , description :: String
                    , twitter :: String
@@ -661,7 +658,8 @@ data Staff = Staff { key :: String
 
 staff = [ Staff { key = "jun"
                 , name = "Jun Matsushita"
-                , offset = True
+                , offset = False
+                , clearfix = False
                 , title = "CEO, Founder"
                 , description = "Jun has been advising international non-profits, humanitarian organisations and media organisations, in the use of innovation and technology for more than 16 years in Paris, New York and London. His technical expertise ranges from system and network administration, web and telephony platforms, to digital security and knowledge management."
                 , twitter = "https://twitter.com/jmatsushita"
@@ -672,6 +670,7 @@ staff = [ Staff { key = "jun"
         , Staff { key = "kat"
                 , name = "Kat Austen"
                 , offset = False
+                , clearfix = False
                 , title = "Head of Research and Design"
                 , description = "Kat is a person. She’s interested in lots of things and phenomena, how things are connected, and why they are connected. She likes patterns but doesn’t have to have them. In the temporal melting-pot of her life so far she has been a scientist, an artist, a journalist and a writer. She welcomes a humane and environmentally kind future."
                 , twitter = "https://twitter.com/katausten"
@@ -679,8 +678,86 @@ staff = [ Staff { key = "jun"
                 , github = "https://github.com/iamkat"
                 , site = "http://katausten.com" 
                 } 
+        , Staff { key = "shure"
+                , name = "Alex Shure"
+                , offset = False
+                , clearfix = False
+                , title = "Head of Engineering"
+                , description = "Alex Shure is a skilled craftsman and inventor active in the field of open source hardware within many different projects. As a human-nerd-interactor he pushes open source beyond the world of software - to infinity and beyond, starting with Open Source Ecology Germany and the Open it Agency."
+                , twitter = "https://twitter.com/AlexShure"
+                , linkedin = ""
+                , github = "https://github.com/aShure"
+                , site = "http://etemu.com/" 
+                } 
+        , Staff { key = "clearfix" 
+                , name = ""
+                , clearfix = True
+                , offset = True
+                , title = ""
+                , description = ""
+                , twitter = ""
+                , linkedin = ""
+                , github = ""
+                , site = "" 
+                }
+        , Staff { key = "fern"
+                , name = "Fernando Morton"
+                , offset = True
+                , clearfix = False
+                , title = "Advisor, Operations"
+                , description = "After spending almost thirty years working in senior management for a global logistics company in the United States, I am ready to translate my business knowledge into something that will make a positive impact. I moved to Berlin in 2014 to learn more about myself and hopefully along the way become a better \"me\". I love living and plan to live for a long time because there is still so much to do! #letsmakeitbetter."
+                , twitter = ""
+                , linkedin = ""
+                , github = ""
+                , site = "" 
+                } 
+        , Staff { key = "sirje"
+                , name = "Sirje Viise"
+                , offset = False
+                , clearfix = False
+                , title = "Advisor, Communications"
+                , description = ""
+                , twitter = ""
+                , linkedin = ""
+                , github = ""
+                , site = "" 
+                } 
         ]
 
+
+
+data Contributors = Contributors { contributor_key :: String
+                                 , contributor_name :: String
+                                 , contributor_offset :: Bool
+                                 , contributor_projects :: String
+                                 , contributor_affiliations :: String
+                                 , contributor_description :: String
+                                 , contributor_twitter :: String
+--                                 , contributor_linkedin :: String
+                                 , contributor_github :: String
+                                 , contributor_site :: String
+                                 }
+contributors = [ Contributors { contributor_key = "elf"
+                              , contributor_name = "elf Pavlik"
+                              , contributor_offset = True
+                              , contributor_projects = "open-oil-framework"
+                              , contributor_affiliations = "Hackers4peace|http://hackers4peace.net/,PolyEconomy|http://polyeconomy.info/"
+                              , contributor_description = "#hacker / #elf - living strictly #moneyless and #stateless already for over 5 years! @hackers4peace @polyeconomy #WorldPeaceGame #ZeroWaste"
+                              , contributor_twitter = "https://twitter.com/elfpavlik"
+                              , contributor_github = "https://github.com/elf-pavlik"
+                              , contributor_site = "https://wwelves.org/perpetual-tripper/"
+                              }
+               , Contributors { contributor_key = "sam"
+                              , contributor_name = "Sam Muirhead"
+                              , contributor_offset = False
+                              , contributor_projects = "open-droplet"
+                              , contributor_affiliations = "Year Of Open Source|http://yearofopensource.net,Open it agency|http://openitagency.eu/"
+                              , contributor_description = "I make all sorts of videos – but I have a focus on using, explaining and promoting Free/Libre/Open Source Software, Free Culture, Open Knowledge and Open Source Hardware. In 2012/13 I lived a Year of Open Source, I’m part of the Open It Agency, and I also run post-production workshops with free software!"
+                              , contributor_twitter = "https://twitter.com/cameralibre"
+                              , contributor_github = "https://github.com/samoos"
+                              , contributor_site = "http://cameralibre.cc/"
+                              }
+                ]
 
 
 --------------------------------------------------------------------------------

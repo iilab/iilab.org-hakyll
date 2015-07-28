@@ -13,32 +13,36 @@
 					<div class="row inner-top-sm text-center">
 					
 					$for(staff)$	
-						<div class="col-sm-4 $if(offset)$ col-sm-offset-2 $endif$ inner-bottom-sm inner-left inner-right">
-							<figure class="member">
-								
-								<div class="">
-									<img src="images/persons/$key$.jpg" class="img-circle">
-								</div><!-- /.icon-overlay -->
-								
-								<figcaption>
-								
-									<h2>
-										$name$
-										<span>$title$</span>
-									</h2>
+					  $if(clearfix)$ 
+					    <div class="clearfix"></div> 
+					  $else$
+							<div class="col-sm-4 $if(offset)$ col-sm-offset-2 $endif$ inner-bottom-sm inner-left inner-right">
+								<figure class="member">
 									
-									<blockquote>$description$</blockquote>
+									<div class="">
+										<img src="images/persons/$key$.jpg" class="img-circle">
+									</div><!-- /.icon-overlay -->
 									
-									<ul class="social">
-										<li><a href="$twitter$"><i class="icon-s-twitter"></i></a></li>
-										<li><a href="$linkedin$"><i class="icon-s-linkedin"></i></a></li>
-										<li><a href="$github$"><i class="icon-s-github"></i></a></li>
-									</ul><!-- /.social -->
+									<figcaption>
 									
-								</figcaption>
-								
-							</figure>
-						</div><!-- /.col -->
+										<h2>
+											$name$
+											<span>$title$</span>
+										</h2>
+										
+										<blockquote>$description$</blockquote>
+										
+										<ul class="social">
+											$if(twitter)$<li><a href="$twitter$"><i class="icon-s-twitter"></i></a></li>$endif$
+											$if(linkedin)$<li><a href="$linkedin$"><i class="icon-s-linkedin"></i></a></li>$endif$
+											$if(github)$<li><a href="$github$"><i class="icon-s-github"></i></a></li>$endif$
+										</ul><!-- /.social -->
+										
+									</figcaption>
+									
+								</figure>
+							</div><!-- /.col -->
+						$endif$
 					$endfor$
 						
 					</div><!-- /.row -->
