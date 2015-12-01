@@ -36,12 +36,6 @@ prose:
           element: "text"
           label: "Slug"
           value: 'yyyy-mm-dd-title-of-post'
-      - name: "date"
-        field:
-          label: "Date"
-          element: "text"
-          value: 'CURRENT_DATETIME'
-          type: text
       - name: "author"
         field:
           element: "select"
@@ -72,7 +66,7 @@ prose:
     _posts/projects:
       - name: "intro"
         field:
-          element: "text"
+          element: "textarea"
           label: "Sidebar Intro Text"
           value: 'This project is about...'
       - name: "slug"
