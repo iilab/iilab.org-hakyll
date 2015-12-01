@@ -1,9 +1,16 @@
+authors: &authors
+- name: 'Jun'
+  value: 'jun'
+- name: 'Kat'
+  value: 'kat'
+- name: 'Shure'
+  value: 'shure'
 projects: &projects
 - name: 'Electronic Medical Records'
   value: 'electronic-medical-record'
 - name: 'Internet Measurement Observation'
   value: 'internet-measurement-observation'
-- name: 'Open Drople'
+- name: 'Open Droplet'
   value: 'open-droplet'
 - name: 'Open Integrity Index'
   value: 'open-integrity-index'
@@ -20,6 +27,10 @@ prose:
   siteurl: 'https://iilab.org'
   metadata:
     _posts/news:
+      - name: "title"
+        field:
+          element: "text"
+          label: "title"
       - name: "slug"
         field:
           element: "text"
@@ -27,8 +38,15 @@ prose:
           value: 'yyyy-mm-dd-title-of-post'
       - name: "date"
         field:
+          label: "Date"
           element: "text"
           value: 'yyyy-mm-dd'
+          type: text
+      - name: "author"
+        field:
+          element: "select"
+          label: "Select Author"
+          options: *authors
       - name: "format"
         field:
           element: "hidden"
@@ -37,11 +55,16 @@ prose:
         field:
           element: "hidden"
           value: 'blog.html'
+      - name: "collection"
+        field:
+          element: "hidden"
+          value: 'news'
       - name: "tags"
         field:
           element: "text"
+          label: "Tags"
           value: "a tag, another tag, yet another"
-      - name: "project"
+      - name: "projects"
         field:
           element: "select"
           label: "Select Project"
