@@ -1,4 +1,4 @@
-programs: &projects
+projects: &projects
 - name: 'Electronic Medical Records'
   value: 'electronic-medical-record'
 - name: 'Internet Measurement Observation'
@@ -45,7 +45,7 @@ prose:
         field:
           element: "select"
           label: "Select Project"
-          options: *languages
+          options: *projects
     _posts/projects:
       - name: "intro"
         field:
