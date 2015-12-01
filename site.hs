@@ -702,7 +702,7 @@ staff = [ Staff { key = "jun"
                 }
         , Staff { key = "fern"
                 , name = "Fernando Morton"
-                , offset = True
+                , offset = False
                 , clearfix = False
                 , title = "Advisor, Operations"
                 , description = "After spending almost thirty years working in senior management for a global logistics company in the United States, I am ready to translate my business knowledge into something that will make a positive impact. I moved to Berlin in 2014 to learn more about myself and hopefully along the way become a better \"me\". I love living and plan to live for a long time because there is still so much to do! #letsmakeitbetter."
@@ -716,7 +716,18 @@ staff = [ Staff { key = "jun"
                 , offset = False
                 , clearfix = False
                 , title = "Advisor, Communications"
-                , description = ""
+                , description = "As an entrepreneur, artist, academic, and an educator, I am fascinated by the conscious and unconscious patterns and processes that contribute to or detract from our individual and collective happiness, and seek the practical intersections between my broad experience in diverse fields in the US and Europe for enacting and reinforcing positive change for our shared socio-economic, environmental, and political fate. I want to use my many powers for good and not evil."
+                , twitter = ""
+                , linkedin = ""
+                , github = ""
+                , site = "" 
+                } 
+        , Staff { key = "lilas"
+                , name = "Lilas Duvernois"
+                , offset = False
+                , clearfix = False
+                , title = "Associate Researcher"
+                , description = "Lilas is a researcher, passionate about the intricate ontologies at play between human actors and technology. She likes to question problems through different lenses. Previously she has worked as a consultant, as a radio journalist and co-directed an independent cultural magazine about gender issues. She writes as a freelance journalist about internet and society issues."
                 , twitter = ""
                 , linkedin = ""
                 , github = ""

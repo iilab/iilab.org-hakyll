@@ -1,0 +1,139 @@
+programs: &projects
+- name: 'Electronic Medical Records'
+  value: 'electronic-medical-record'
+- name: 'Internet Measurement Observation'
+  value: 'internet-measurement-observation'
+- name: 'Open Drople'
+  value: 'open-droplet'
+- name: 'Open Integrity Index'
+  value: 'open-integrity-index'
+- name: 'Open Oil Data Framework'
+  value: 'open-oil-framework'
+- name: 'Panic Button'
+  value: 'panic-button'
+- name: 'Engineering Comes Home'
+  value: 'engineering-comes-home'
+prose:
+  rooturl: '_posts'
+  media: '_assets/images/news'
+  relativeLinks: 'https://raw.github.com/tristen/documents/master/links.jsonp'
+  siteurl: 'https://iilab.org'
+  metadata:
+    _posts/news:
+      - name: "slug"
+        field:
+          element: "text"
+          label: "Slug"
+          value: 'yyyy-mm-dd-title-of-post'
+      - name: "date"
+        field:
+          element: "text"
+          value: 'yyyy-mm-dd'
+      - name: "format"
+        field:
+          element: "hidden"
+          value: 'blog'
+      - name: "template"
+        field:
+          element: "hidden"
+          value: 'blog.html'
+      - name: "tags"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "project"
+        field:
+          element: "select"
+          label: "Select Project"
+          options: *languages
+    _posts/projects:
+      - name: "intro"
+        field:
+          element: "text"
+          label: "Sidebar Intro Text"
+          value: 'This project is about...'
+      - name: "slug"
+        field:
+          element: "text"
+          label: "Slug"
+          value: 'title-of-project'
+      - name: "date"
+        field:
+          element: "text"
+          value: 'yyyy-mm-dd'
+      - name: "start-date"
+        field:
+          element: "text"
+          value: 'yyyy-mm-dd'
+      - name: "end-date"
+        field:
+          element: "text"
+          value: 'yyyy-mm-dd'
+      - name: "collection"
+        field:
+          element: "hidden"
+          value: 'projects'
+      - name: "format"
+        field:
+          element: "hidden"
+          value: 'blog'
+      - name: "template"
+        field:
+          element: "hidden"
+          value: 'project.html'
+      - name: "tags"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "tags-program"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "tags-tech"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "tags-tools"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "tags-project"
+        field:
+          element: "text"
+          value: "a tag, another tag, yet another"
+      - name: "client"
+        field:
+          element: "text"
+          value: "Client Name"
+      - name: "client-link"
+        field:
+          element: "text"
+          value: "https://clientwebsite.com"
+      - name: "client-logo"
+        field:
+          element: "text"
+          value: "client_logo.png"
+      - name: "links"
+        field:
+          element: "text"
+          value: "https://somewhere"
+      - name: "links-title"
+        field:
+          element: "text"
+          value: "Link Title"
+      - name: "cover"
+        field:
+          element: "text"
+          value: "cover_image.png"
+      - name: "cover-caption"
+        field:
+          element: "text"
+          value: "Cover Caption"
+      - name: "images"
+        field:
+          element: "text"
+          value: "image.png, another_image.png"
+      - name: "cover-caption"
+        field:
+          element: "text"
+          value: "Image Caption| Another image|"
