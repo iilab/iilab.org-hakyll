@@ -2,7 +2,7 @@
 collection: news
 template: blog.html
 format: blog
-slug: "2015-12-01-ten-recommendations-water-sector"
+slug: "2015-12-01--ten-recommendations-to-make-the-water-sector-more-resilient-open-data-and-citizen-stewardship"
 author: jun
 tags: "a tag, another tag, yet another"
 projects: "engineering-comes-home"
