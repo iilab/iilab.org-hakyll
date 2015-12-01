@@ -23,7 +23,6 @@ projects: &projects
 prose:
   rooturl: '_posts'
   media: '_assets/images/news'
-  relativeLinks: 'https://raw.github.com/tristen/documents/master/links.jsonp'
   siteurl: 'https://iilab.org'
   metadata:
     _posts/news:
